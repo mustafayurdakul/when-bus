@@ -127,14 +127,14 @@ const App: React.FC = () => {
 			<div className="mb-4">
 				<input
 					type="text"
-					className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-2 rounded"
+					className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-2 rounded-lg"
 					value={inputValue}
 					placeholder="Durak Numarası (Örn: 30374)"
 					onChange={handleInputChange}
 				/>
 			</div>
 			<button
-				className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 disabled:bg-neutral-900 font-medium py-2 px-4 rounded w-full"
+				className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 disabled:bg-neutral-900 font-medium py-2 px-4 rounded-lg w-full"
 				onClick={sendPostRequest}
 				disabled={isLoading || !validateInput()}
 			>
@@ -183,7 +183,7 @@ const App: React.FC = () => {
 							{upcomingBusses.map((item, index) => (
 								<div
 									key={index}
-									className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded mb-4"
+									className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded-lg mb-4"
 								>
 									<span className="font-bold ">{item.number}</span>
 									<span className="block text-xs  mb-3">
@@ -216,7 +216,7 @@ const App: React.FC = () => {
 								allBusses.map((item, index) => (
 									<div
 										key={index}
-										className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded mb-4"
+										className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded-lg mb-4"
 									>
 										<span className="font-bold">{item.number}</span>
 										<span className="block text-xs ">
@@ -245,7 +245,7 @@ const App: React.FC = () => {
 					)
 				}
 			</div>
-			<div className="text-xs border-t border-neutral-900 shadow pt-4 my-4">
+			<div className="text-xs border-t border-neutral-900 italic shadow pt-4 my-4">
 				Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
 			</div>
 		</div>
