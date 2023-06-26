@@ -9,10 +9,11 @@ interface BusInfo {
 }
 
 const App: React.FC = () => {
-	const [yaklasanBuses, setYaklasanBuses] = useState<BusInfo[]>([]);
-	const [gecenBuses, setGecenBuses] = useState<BusInfo[]>([]);
 
-	const [inputValue, setInputValue] = useState("30374");
+	const [upcomingBusses, setupcomingBusses] = useState<BusInfo[]>([]);
+	const [allBusses, setallBusses] = useState<BusInfo[]>([]);
+
+	const [inputValue, setInputValue] = useState("");
 	const [lastUpdateTime, setLastUpdateTime] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +21,18 @@ const App: React.FC = () => {
 		setInputValue(event.target.value);
 	};
 
+	const validateInput = () => {
+		if (inputValue.length !== 5) {
+			return false;
+		}
+		if (isNaN(Number(inputValue))) {
+			return false;
+		}
+		return true;
+	};
+
 	const sendPostRequest = async () => {
+
 		try {
 			setIsLoading(true);
 			const response = await axios.post(
@@ -76,7 +88,7 @@ const App: React.FC = () => {
 					return { number, description, remainingTime: time, stopsLeft: stops };
 				});
 
-				setYaklasanBuses(buses);
+				setupcomingBusses(buses);
 			}
 
 			if (gecenDiv) {
@@ -99,7 +111,7 @@ const App: React.FC = () => {
 					return { number, description };
 				});
 
-				setGecenBuses(buses);
+				setallBusses(buses);
 			}
 		} catch (error) {
 			console.error(error);
@@ -110,33 +122,27 @@ const App: React.FC = () => {
 	};
 
 	return (
-		<div className="container mx-auto max-w-md mt-10 px-4 bg-black text-zinc-200">
-			<h1 className="text-2xl font-bold mb-4 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
+		<div className="container mx-auto max-w-md mt-10 px-4 bg-neutral-950 text-zinc-300">
+			<h1 className="text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
 			<div className="mb-4">
-				<label
-					htmlFor="busNumber"
-					className="block mb-2 text-lg font-medium"
-				>
-					Durak numarasını girin:
-				</label>
 				<input
 					type="text"
-					id="busNumber"
-					className="w-full border border-zinc-800 bg-zinc-900 text-zinc-200 px-3 py-2 rounded"
+					className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-2 rounded"
 					value={inputValue}
+					placeholder="Durak Numarası (Örn: 30374)"
 					onChange={handleInputChange}
 				/>
 			</div>
 			<button
-				className="bg-blue-500 hover:bg-blue-600 text-zinc-200 font-medium py-2 px-4 rounded w-full"
+				className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 disabled:bg-neutral-900 font-medium py-2 px-4 rounded w-full"
 				onClick={sendPostRequest}
-				disabled={isLoading}
+				disabled={isLoading || !validateInput()}
 			>
 				{isLoading ? (
 					<div className="flex items-center justify-center">
 						<span className="mr-2">Yükleniyor</span>
 						<svg
-							className="animate-spin h-5 w-5 text-zinc-200"
+							className="animate-spin h-5 w-5 "
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
 							viewBox="0 0 24 24"
@@ -160,57 +166,79 @@ const App: React.FC = () => {
 					"İstek Gönder"
 				)}
 			</button>
-			{lastUpdateTime && (
-				<div className="text-sm text-green-600 mt-4 text-center">
-					Son Güncelleme Zamanı: {lastUpdateTime}
-				</div>
-			)}
+			{
+				lastUpdateTime !== "" && (upcomingBusses.length > 0 || allBusses.length > 0) && (
+					<div className="text-sm text-green-700 mt-4 text-center">
+						Son Güncelleme Zamanı: {lastUpdateTime}
+					</div>
+				)
+			}
 			<div className="mt-4">
-				{yaklasanBuses.length > 0 && (
-					<div className="border-t border-zinc-800 pt-4">
-						<h2 className="text-lg font-bold mb-4">Yaklaşan Otobüsler</h2>
-						{yaklasanBuses.map((item, index) => (
-							<div
-								key={index}
-								className="bg-zinc-900 border border-zinc-800 p-4 rounded mb-4"
-							>
-								<span className="font-bold text-zinc-200">{item.number}</span>
-								<span className="block text-xs text-zinc-300 mb-3">
-									{item.description}
-								</span>
-								{item.remainingTime && (
-									<span className="block text-sm text-zinc-300">
-										Kalan Süre: {item.remainingTime} Dakika
+				{
+					upcomingBusses.length > 0 && (
+						<div className="border-t border-neutral-900 shadow pt-4">
+							<h2 className="text-lg font-bold mb-4">Yaklaşan Otobüsler</h2>
+							{upcomingBusses.map((item, index) => (
+								<div
+									key={index}
+									className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded mb-4"
+								>
+									<span className="font-bold ">{item.number}</span>
+									<span className="block text-xs  mb-3">
+										{item.description}
 									</span>
-								)}
-								{item.stopsLeft && (
-									<span className="block text-sm text-zinc-300">
-										Kaldığı Durak: {item.stopsLeft}
+									{item.remainingTime && (
+										<span className="block text-sm ">
+											Kalan Süre: {item.remainingTime} Dakika
+										</span>
+									)}
+									{item.stopsLeft && (
+										<span className="block text-sm ">
+											Kaldığı Durak: {item.stopsLeft}
+										</span>
+									)}
+								</div>
+							))}
+						</div>
+					)
+				}
+				{
+					allBusses.length > 0 && (
+						<div className="border-t border-neutral-900 shadow pt-4">
+							<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
+							{allBusses.map((item, index) => (
+								<div
+									key={index}
+									className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded mb-4"
+								>
+									<span className="font-bold">{item.number}</span>
+									<span className="block text-xs ">
+										{item.description}
 									</span>
-								)}
+								</div>
+							))}
+						</div>
+					)
+				}
+				{
+					(upcomingBusses.length === 0 && allBusses.length === 0 && lastUpdateTime !== "")
+					&& (
+						<>
+							<div className="text-sm text-center text-red-700 mb-4">
+								Veri bulunamadı. Lütfen durak numarasını kontrol edin.
 							</div>
-						))}
-					</div>
-				)}
-				{gecenBuses.length > 0 && (
-					<div className="border-t border-zinc-800 pt-4">
-						<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
-						{gecenBuses.map((item, index) => (
-							<div
-								key={index}
-								className="bg-zinc-900 border border-zinc-800 p-4 rounded mb-4"
-							>
-								<span className="font-bold text-zinc-200">{item.number}</span>
-								<span className="block text-xs text-zinc-300">
-									{item.description}
-								</span>
+							<div className="border-t border-neutral-900 shadow pt-4 my-4">
+								<div className="text-xs">
+									Durak numarası genellikle 5 haneli bir sayıdır ve duraklarda bulunan numaralı levhalarda yazmaktadır. Durak numarası bilgisine <a className="text-blue-700" href="https://www.kocaeli.bel.tr/tr/main/hatlar">kocaeli.bel.tr</a> sitesinden de ulaşabilirsiniz.
+								</div>
 							</div>
-						))}
-					</div>
-				)}
+						</>
+
+					)
+				}
 			</div>
-			<div className="text-xs text-center border-t border-zinc-800 pt-4 my-4">
-				Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-600" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
+			<div className="text-xs border-t border-neutral-900 shadow pt-4 my-4">
+				Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
 			</div>
 		</div>
 	);
