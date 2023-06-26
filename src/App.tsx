@@ -201,7 +201,7 @@ const App: React.FC = () => {
 								className="bg-zinc-900 border border-zinc-800 p-4 rounded mb-4"
 							>
 								<span className="font-bold text-zinc-200">{item.number}</span>
-								<span className="block text-xs text-zinc-300 mb-3">
+								<span className="block text-xs text-zinc-300">
 									{item.description}
 								</span>
 							</div>
