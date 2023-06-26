@@ -138,33 +138,35 @@ const App: React.FC = () => {
 				onClick={sendPostRequest}
 				disabled={isLoading || !validateInput()}
 			>
-				{isLoading ? (
-					<div className="flex items-center justify-center">
-						<span className="mr-2">Yükleniyor</span>
-						<svg
-							className="animate-spin h-5 w-5 "
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-						>
-							<circle
-								className="opacity-25"
-								cx="12"
-								cy="12"
-								r="10"
-								stroke="currentColor"
-								strokeWidth="4"
-							></circle>
-							<path
-								className="opacity-75"
-								fill="currentColor"
-								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-							></path>
-						</svg>
-					</div>
-				) : (
-					"İstek Gönder"
-				)}
+				{
+					isLoading ? (
+						<div className="flex items-center justify-center">
+							<span className="mr-2">Yükleniyor</span>
+							<svg
+								className="animate-spin h-5 w-5 "
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									className="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									strokeWidth="4"
+								></circle>
+								<path
+									className="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+						</div>
+					) : (
+						"İstek Gönder"
+					)
+				}
 			</button>
 			{
 				lastUpdateTime !== "" && (upcomingBusses.length > 0 || allBusses.length > 0) && (
@@ -187,16 +189,20 @@ const App: React.FC = () => {
 									<span className="block text-xs  mb-3">
 										{item.description}
 									</span>
-									{item.remainingTime && (
-										<span className="block text-sm ">
-											Kalan Süre: {item.remainingTime} Dakika
-										</span>
-									)}
-									{item.stopsLeft && (
-										<span className="block text-sm ">
-											Kaldığı Durak: {item.stopsLeft}
-										</span>
-									)}
+									{
+										item.remainingTime && (
+											<span className="block text-sm ">
+												Kalan Süre: {item.remainingTime} Dakika
+											</span>
+										)
+									}
+									{
+										item.stopsLeft && (
+											<span className="block text-sm ">
+												Kaldığı Durak: {item.stopsLeft}
+											</span>
+										)
+									}
 								</div>
 							))}
 						</div>
@@ -206,17 +212,19 @@ const App: React.FC = () => {
 					allBusses.length > 0 && (
 						<div className="border-t border-neutral-900 shadow pt-4">
 							<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
-							{allBusses.map((item, index) => (
-								<div
-									key={index}
-									className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded mb-4"
-								>
-									<span className="font-bold">{item.number}</span>
-									<span className="block text-xs ">
-										{item.description}
-									</span>
-								</div>
-							))}
+							{
+								allBusses.map((item, index) => (
+									<div
+										key={index}
+										className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded mb-4"
+									>
+										<span className="font-bold">{item.number}</span>
+										<span className="block text-xs ">
+											{item.description}
+										</span>
+									</div>
+								))
+							}
 						</div>
 					)
 				}
