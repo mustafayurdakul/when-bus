@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+import BusCard from "./BusCard";
+
 interface BusInfo {
 	number: string;
 	description?: string;
@@ -50,13 +52,12 @@ const App: React.FC = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition((position) => {
 				setLocation(position);
-			}, (error) => {
-				console.error(error);
-				notify("Konum bilgisi alınamadı. Cihazınızın konum servislerinin açık olduğundan emin olun.", true);
+			}, () => {
+				notify("Konum bilgisi alınamadı. Cihazınızın konum servislerinin açık olduğundan emin olun.");
 			}
 			);
 		} else {
-			notify("Tarayıcınız konum bilgisini desteklemiyor.", true);
+			notify("Tarayıcınız konum bilgisini desteklemiyor.");
 		}
 	};
 
@@ -101,7 +102,7 @@ const App: React.FC = () => {
 		}
 	}, [location]);
 
-	const notify = (message: string, error: boolean) => {
+	const notify = (message: string) => {
 		toast.dismiss();
 		toast(
 			(t) => (
@@ -299,29 +300,7 @@ const App: React.FC = () => {
 								</span>
 							</div>
 							{upcomingBusses.map((item, index) => (
-								<div
-									key={index}
-									className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded-lg mb-4"
-								>
-									<span className="font-bold ">{item.number}</span>
-									<span className="block text-xs  mb-3">
-										{item.description}
-									</span>
-									{
-										item.remainingTime && (
-											<span className="block text-sm ">
-												Kalan Süre: {item.remainingTime} Dakika
-											</span>
-										)
-									}
-									{
-										item.stopsLeft && (
-											<span className="block text-sm ">
-												Kaldığı Durak: {item.stopsLeft}
-											</span>
-										)
-									}
-								</div>
+								<BusCard key={index} {...item}></BusCard>
 							))}
 						</div>
 					)
@@ -339,15 +318,7 @@ const App: React.FC = () => {
 								</span>
 							</div>					{
 								allBusses.map((item, index) => (
-									<div
-										key={index}
-										className="bg-neutral-900 border border-neutral-900 shadow p-4 rounded-lg mb-4"
-									>
-										<span className="font-bold">{item.number}</span>
-										<span className="block text-xs ">
-											{item.description}
-										</span>
-									</div>
+									<BusCard key={index} {...item}></BusCard>
 								))
 							}
 						</div>
