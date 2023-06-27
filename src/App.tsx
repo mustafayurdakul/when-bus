@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface BusInfo {
 	number: string;
@@ -8,28 +8,92 @@ interface BusInfo {
 	stopsLeft?: string;
 }
 
+interface BusStationInfo {
+	id: string;
+	name?: string;
+}
+
 const App: React.FC = () => {
 
 	const [upcomingBusses, setupcomingBusses] = useState<BusInfo[]>([]);
-	const [allBusses, setallBusses] = useState<BusInfo[]>([]);
+	const [allBusses, setAllBusses] = useState<BusInfo[]>([]);
 
-	const [inputValue, setInputValue] = useState("");
+	const [busStationInfo, setBusStationInfo] = useState<BusStationInfo>({
+		id: ""
+	});
+
 	const [lastUpdateTime, setLastUpdateTime] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
+	const [location, setLocation] = useState<GeolocationPosition>();
+
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setInputValue(event.target.value);
+		setBusStationInfo(
+			{
+				id: event.target.value
+			}
+		);
 	};
 
 	const validateInput = () => {
-		if (inputValue.length !== 5) {
+		if (!busStationInfo.id || busStationInfo.id.length !== 5) {
 			return false;
 		}
-		if (isNaN(Number(inputValue))) {
+		if (isNaN(Number(busStationInfo.id))) {
 			return false;
 		}
 		return true;
 	};
+
+	// Get location from browser
+	const getLocation = () => {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition((position) => {
+				setLocation(position);
+			});
+		}
+	};
+
+	const getClosestStop = async (latitude: number, longitude: number) => {
+		try {
+			setIsLoading(true);
+			const response = await axios.post(
+				"https://www.e-komobil.com/yakin_duraklar.php",
+				{
+					func: "ns",
+					lat: latitude,
+					lon: longitude,
+				},
+				{
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+				}
+			);
+
+			return {
+				id: response.data["id"][0],
+				name: response.data["name"][0]
+			} as BusStationInfo;
+
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		if (location) {
+			const { latitude, longitude } = location.coords;
+			getClosestStop(latitude, longitude).then((busStationInfo) => {
+				if (busStationInfo) {
+					setBusStationInfo(busStationInfo);
+				}
+			});
+
+		}
+	}, [location]);
 
 	const sendPostRequest = async () => {
 
@@ -38,7 +102,7 @@ const App: React.FC = () => {
 			const response = await axios.post(
 				"https://www.e-komobil.com/yolcu_bilgilendirme_operations.php?cmd=searchSmartStop",
 				{
-					stop_id: inputValue,
+					stop_id: busStationInfo.id,
 				},
 				{
 					headers: {
@@ -111,7 +175,7 @@ const App: React.FC = () => {
 					return { number, description };
 				});
 
-				setallBusses(buses);
+				setAllBusses(buses);
 			}
 		} catch (error) {
 			console.error(error);
@@ -128,46 +192,53 @@ const App: React.FC = () => {
 				<input
 					type="text"
 					className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-2 rounded-lg"
-					value={inputValue}
+					value={busStationInfo.id}
 					placeholder="Durak Numarası (Örn: 30374)"
 					onChange={handleInputChange}
 				/>
 			</div>
-			<button
-				className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 disabled:bg-neutral-900 font-medium py-2 px-4 rounded-lg w-full"
-				onClick={sendPostRequest}
-				disabled={isLoading || !validateInput()}
-			>
-				{
-					isLoading ? (
-						<div className="flex items-center justify-center">
-							<span className="mr-2">Yükleniyor</span>
-							<svg
-								className="animate-spin h-5 w-5 "
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<circle
-									className="opacity-25"
-									cx="12"
-									cy="12"
-									r="10"
-									stroke="currentColor"
-									strokeWidth="4"
-								></circle>
-								<path
-									className="opacity-75"
-									fill="currentColor"
-									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-								></path>
-							</svg>
-						</div>
-					) : (
-						"İstek Gönder"
-					)
-				}
-			</button>
+			<div className="flex justify-between items-center">
+				<button
+					className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-4 rounded-lg w-full mr-3"
+					onClick={sendPostRequest}
+					disabled={isLoading || !validateInput()}
+				>
+					{
+						isLoading ? (
+							<div className="flex items-center justify-center">
+								<span className="mr-2">Yükleniyor</span>
+								<svg
+									className="animate-spin h-5 w-5 "
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+								>
+									<circle
+										className="opacity-25"
+										cx="12"
+										cy="12"
+										r="10"
+										stroke="currentColor"
+										strokeWidth="4"
+									></circle>
+									<path
+										className="opacity-75"
+										fill="currentColor"
+										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+									></path>
+								</svg>
+							</div>
+						) : (
+							"İstek Gönder"
+						)
+					}
+				</button>
+				<button className="bg-gray-900 hover:bg-gray-800 focus:bg-gray-900 border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-3 rounded-lg"
+					onClick={getLocation}
+				>
+					📍
+				</button>
+			</div>
 			{
 				lastUpdateTime !== "" && (upcomingBusses.length > 0 || allBusses.length > 0) && (
 					<div className="text-sm text-green-700 mt-4 text-center">
