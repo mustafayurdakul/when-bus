@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 interface BusInfo {
 	number: string;
@@ -45,12 +46,17 @@ const App: React.FC = () => {
 		return true;
 	};
 
-	// Get location from browser
 	const getLocation = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition((position) => {
 				setLocation(position);
-			});
+			}, (error) => {
+				console.error(error);
+				notify("Konum bilgisi alınamadı. Cihazınızın konum servislerinin açık olduğundan emin olun.", true);
+			}
+			);
+		} else {
+			notify("Tarayıcınız konum bilgisini desteklemiyor.", true);
 		}
 	};
 
@@ -94,6 +100,38 @@ const App: React.FC = () => {
 
 		}
 	}, [location]);
+
+	const notify = (message: string, error: boolean) => {
+		toast.dismiss();
+		toast(
+			(t) => (
+				<div className="flex items-center">
+					<span>
+						{message}
+					</span>
+					<button className="p-1" onClick={() => toast.dismiss(t.id)}>
+						<svg
+							className="h-5 w-5 text-zinc-900"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fillRule="evenodd"
+								d="M10 11.414l4.95 4.95 1.414-1.414L11.414 10l4.95-4.95L14.95 3.636 10 8.586 5.05 3.636 3.636 5.05 8.586 10l-4.95 4.95 1.414 1.414L10 11.414z"
+								clipRule="evenodd"
+							/>
+						</svg>
+					</button>
+				</div>
+			),
+			{
+				duration: 55000,
+				position: "bottom-center",
+				className: "bg-neutral-300 text-zinc-900 border border-neutral-300 shadow rounded-lg text-xs"
+			}
+		);
+	};
 
 	const sendPostRequest = async () => {
 
@@ -233,7 +271,7 @@ const App: React.FC = () => {
 						)
 					}
 				</button>
-				<button className="bg-gray-900 hover:bg-gray-800 focus:bg-gray-900 border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-3 rounded-lg"
+				<button className="bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900 border border-neutral-900 shadow disabled:bg-neutral-900 p-2 rounded-lg"
 					onClick={getLocation}
 				>
 					📍
@@ -250,7 +288,16 @@ const App: React.FC = () => {
 				{
 					upcomingBusses.length > 0 && (
 						<div className="border-t border-neutral-900 shadow pt-4">
-							<h2 className="text-lg font-bold mb-4">Yaklaşan Otobüsler</h2>
+
+							<div className="flex justify-between items-baseline">
+								<h2 className="text-lg font-bold mb-4">Yaklaşan Otobüsler</h2>
+								<span className="text-xs lowercase">{
+									busStationInfo.name
+										? `${busStationInfo.name} - ${busStationInfo.id}`
+										: `${busStationInfo.id}`
+								}
+								</span>
+							</div>
 							{upcomingBusses.map((item, index) => (
 								<div
 									key={index}
@@ -282,8 +329,15 @@ const App: React.FC = () => {
 				{
 					allBusses.length > 0 && (
 						<div className="border-t border-neutral-900 shadow pt-4">
-							<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
-							{
+							<div className="flex justify-between items-baseline">
+								<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
+								<span className="text-xs lowercase">{
+									busStationInfo.name
+										? `${busStationInfo.name} - ${busStationInfo.id}`
+										: `${busStationInfo.id}`
+								}
+								</span>
+							</div>					{
 								allBusses.map((item, index) => (
 									<div
 										key={index}
@@ -319,6 +373,7 @@ const App: React.FC = () => {
 			<div className="text-xs border-t border-neutral-900 italic shadow pt-4 my-4">
 				Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
 			</div>
+			<Toaster />
 		</div>
 	);
 };
