@@ -292,12 +292,12 @@ const App: React.FC = () => {
 
 							<div className="flex justify-between items-baseline">
 								<h2 className="text-lg font-bold mb-4">Yaklaşan Otobüsler</h2>
-								<span className="text-xs lowercase">{
-									busStationInfo.name
-										? `${busStationInfo.name} - ${busStationInfo.id}`
-										: `${busStationInfo.id}`
+								{
+									busStationInfo.name && (
+										<span className="text-sm">{busStationInfo.name}</span>
+									)
+
 								}
-								</span>
 							</div>
 							{upcomingBusses.map((item, index) => (
 								<BusCard key={index} {...item}></BusCard>
@@ -310,12 +310,12 @@ const App: React.FC = () => {
 						<div className="border-t border-neutral-900 shadow pt-4">
 							<div className="flex justify-between items-baseline">
 								<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
-								<span className="text-xs lowercase">{
-									busStationInfo.name
-										? `${busStationInfo.name} - ${busStationInfo.id}`
-										: `${busStationInfo.id}`
+								{
+									busStationInfo.name && (
+										<span className="text-sm">{busStationInfo.name}</span>
+									)
+
 								}
-								</span>
 							</div>					{
 								allBusses.map((item, index) => (
 									<BusCard key={index} {...item}></BusCard>
