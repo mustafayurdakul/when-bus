@@ -1,4 +1,4 @@
-# Ne Zaman Otobüs 🚌 ⏰
+# Ne Zaman Otobüs 🚌
 
 **Kocaeli'nde** otobüs durağına gelen otobüsleri görüntüleyebileceğiniz bir web uygulaması. Neden mi? Ulaşması daha kolay.
 
