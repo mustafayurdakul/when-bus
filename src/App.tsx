@@ -16,6 +16,19 @@ interface BusStationInfo {
 	name?: string;
 }
 
+interface Location {
+	id: string;
+	name: string;
+}
+
+interface CloseStationsResponse {
+	name: string[];
+	lat: string[];
+	lon: string[];
+	dist: string[];
+	id: string[];
+}
+
 const App: React.FC = () => {
 
 	const [upcomingBusses, setupcomingBusses] = useState<BusInfo[]>([]);
@@ -25,17 +38,35 @@ const App: React.FC = () => {
 		id: ""
 	});
 
+	const [busStations, setBusStations] = useState<Location[]>([]);
+
 	const [lastUpdateTime, setLastUpdateTime] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [location, setLocation] = useState<GeolocationPosition>();
 
+	const [toggleLocation, setToggleLocation] = useState(false);
+
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setBusStationInfo(
-			{
-				id: event.target.value
-			}
-		);
+		const { value } = event.target;
+		setBusStationInfo({
+			id: value
+		});
+	};
+
+	const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const { value } = event.target;
+		const station = busStations.find((station) => station.id === value);
+		if (station) {
+			setBusStationInfo({
+				id: station.id,
+				name: station.name
+			});
+		} else {
+			setBusStationInfo({
+				id: value
+			});
+		}
 	};
 
 	const validateInput = () => {
@@ -48,20 +79,30 @@ const App: React.FC = () => {
 		return true;
 	};
 
+	const handleToggleLocation = () => {
+		setToggleLocation(!toggleLocation);
+		if (!toggleLocation) {
+			getLocation();
+		}
+	};
+
 	const getLocation = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition((position) => {
+				setToggleLocation(true);
 				setLocation(position);
 			}, () => {
+				setToggleLocation(false);
 				notify("Konum bilgisi alınamadı. Cihazınızın konum servislerinin açık olduğundan emin olun.");
 			}
 			);
 		} else {
+			setToggleLocation(false);
 			notify("Tarayıcınız konum bilgisini desteklemiyor.");
 		}
 	};
 
-	const getClosestStop = async (latitude: number, longitude: number) => {
+	const getClosestBusStations = async (latitude: number, longitude: number) => {
 		try {
 			setIsLoading(true);
 			const response = await axios.post(
@@ -78,11 +119,9 @@ const App: React.FC = () => {
 				}
 			);
 
-			return {
-				id: response.data["id"][0],
-				name: response.data["name"][0]
-			} as BusStationInfo;
-
+			const stations = organizeBusStationList(response.data);
+			setBusStations(stations);
+			return stations;
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -93,14 +132,29 @@ const App: React.FC = () => {
 	useEffect(() => {
 		if (location) {
 			const { latitude, longitude } = location.coords;
-			getClosestStop(latitude, longitude).then((busStationInfo) => {
+			getClosestBusStations(latitude, longitude).then((busStationInfo) => {
 				if (busStationInfo) {
-					setBusStationInfo(busStationInfo);
+					setBusStationInfo(busStationInfo[0]);
 				}
 			});
 
 		}
 	}, [location]);
+
+	const organizeBusStationList = (response: CloseStationsResponse): Location[] => {
+		const locations: Location[] = [];
+
+		for (let i = 0; i < response.name.length; i++) {
+			const location: Location = {
+				id: response.id[i],
+				name: response.name[i],
+			};
+
+			locations.push(location);
+		}
+
+		return locations;
+	};
 
 	const notify = (message: string) => {
 		toast.dismiss();
@@ -228,13 +282,22 @@ const App: React.FC = () => {
 		<div className="container mx-auto max-w-md mt-10 px-4 bg-neutral-950 text-zinc-300">
 			<h1 className="text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
 			<div className="mb-4">
-				<input
-					type="text"
-					className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-2 rounded-lg"
-					value={busStationInfo.id}
-					placeholder="Durak Numarası (Örn: 30374)"
-					onChange={handleInputChange}
-				/>
+				{!toggleLocation ?
+					<input type="text" className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-3 rounded-lg appearance-none text-xs text-zinc-300" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
+					/> :
+					<select
+						className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-3 rounded-lg appearance-none text-xs text-zinc-300"
+						value={busStationInfo.id}
+						onChange={handleSelectChange}
+					>
+						<option value="">Durak Seçin</option>
+						{busStations.map((station) => (
+							<option key={station.id} value={station.id}>
+								{station.name}
+							</option>
+						))}
+					</select>
+				}
 			</div>
 			<div className="flex justify-between items-center">
 				<button
@@ -272,8 +335,8 @@ const App: React.FC = () => {
 						)
 					}
 				</button>
-				<button className="bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900 border border-neutral-900 shadow disabled:bg-neutral-900 p-2 rounded-lg"
-					onClick={getLocation}
+				<button className={"border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-2 rounded-lg " + (toggleLocation ? "bg-indigo-900 hover:bg-indigo-800 focus:bg-indigo-900" : "bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900")} disabled={isLoading}
+					onClick={handleToggleLocation}
 				>
 					📍
 				</button>
