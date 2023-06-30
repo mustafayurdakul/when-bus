@@ -1,49 +1,26 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+import AppService from "./App.service";
 import BusCard from "./BusCard";
+import BusInfo from "./types/BusInfo";
+import BusStationInfo from "./types/BusStationInfo";
 
-interface BusInfo {
-	number: string;
-	description?: string;
-	remainingTime?: string;
-	stopsLeft?: string;
-}
-
-interface BusStationInfo {
-	id: string;
-	name?: string;
-}
-
-interface Location {
-	id: string;
-	name: string;
-}
-
-interface CloseStationsResponse {
-	name: string[];
-	lat: string[];
-	lon: string[];
-	dist: string[];
-	id: string[];
-}
 
 const App: React.FC = () => {
 
-	const [upcomingBusses, setupcomingBusses] = useState<BusInfo[]>([]);
+	const [upcomingBusses, setUpcomingBusses] = useState<BusInfo[]>([]);
 	const [allBusses, setAllBusses] = useState<BusInfo[]>([]);
 
 	const [busStationInfo, setBusStationInfo] = useState<BusStationInfo>({
 		id: ""
 	});
 
-	const [busStations, setBusStations] = useState<Location[]>([]);
+	const [closestBusStations, setClosestBusStations] = useState<BusStationInfo[]>([]);
 
 	const [lastUpdateTime, setLastUpdateTime] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
 
-	const [location, setLocation] = useState<GeolocationPosition>();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [toggleLocation, setToggleLocation] = useState(false);
 
@@ -56,7 +33,7 @@ const App: React.FC = () => {
 
 	const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const { value } = event.target;
-		const station = busStations.find((station) => station.id === value);
+		const station = closestBusStations.find((station) => station.id === value);
 		if (station) {
 			setBusStationInfo({
 				id: station.id,
@@ -77,83 +54,6 @@ const App: React.FC = () => {
 			return false;
 		}
 		return true;
-	};
-
-	const handleToggleLocation = () => {
-		setToggleLocation(!toggleLocation);
-		if (!toggleLocation) {
-			getLocation();
-		}
-	};
-
-	const getLocation = () => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition((position) => {
-				setToggleLocation(true);
-				setLocation(position);
-			}, () => {
-				setToggleLocation(false);
-				notify("Konum bilgisi alınamadı. Cihazınızın konum servislerinin açık olduğundan emin olun.");
-			}
-			);
-		} else {
-			setToggleLocation(false);
-			notify("Tarayıcınız konum bilgisini desteklemiyor.");
-		}
-	};
-
-	const getClosestBusStations = async (latitude: number, longitude: number) => {
-		try {
-			setIsLoading(true);
-			const response = await axios.post(
-				"https://www.e-komobil.com/yakin_duraklar.php",
-				{
-					func: "ns",
-					lat: latitude,
-					lon: longitude,
-				},
-				{
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
-				}
-			);
-
-			const stations = organizeBusStationList(response.data);
-			setBusStations(stations);
-			return stations;
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		if (location) {
-			const { latitude, longitude } = location.coords;
-			getClosestBusStations(latitude, longitude).then((busStationInfo) => {
-				if (busStationInfo) {
-					setBusStationInfo(busStationInfo[0]);
-				}
-			});
-
-		}
-	}, [location]);
-
-	const organizeBusStationList = (response: CloseStationsResponse): Location[] => {
-		const locations: Location[] = [];
-
-		for (let i = 0; i < response.name.length; i++) {
-			const location: Location = {
-				id: response.id[i],
-				name: response.name[i],
-			};
-
-			locations.push(location);
-		}
-
-		return locations;
 	};
 
 	const notify = (message: string) => {
@@ -188,94 +88,64 @@ const App: React.FC = () => {
 		);
 	};
 
-	const sendPostRequest = async () => {
-
-		try {
-			setIsLoading(true);
-			const response = await axios.post(
-				"https://www.e-komobil.com/yolcu_bilgilendirme_operations.php?cmd=searchSmartStop",
-				{
-					stop_id: busStationInfo.id,
-				},
-				{
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
-				}
-			);
-
-			const parser = new DOMParser();
-			const doc = parser.parseFromString(response.data, "text/html");
-
-			const yaklasanDiv = doc.getElementById("yaklasan");
-			const gecenDiv = doc.getElementById("gecen");
-
-			if (yaklasanDiv) {
-				const busElements = yaklasanDiv.querySelectorAll(".row.alert-info");
-				const buses: BusInfo[] = Array.from(busElements).map((busElement) => {
-					const numberElement = busElement.querySelector("div > span > a");
-					const number =
-						numberElement?.textContent?.trim().split("-")[0] ?? "";
-
-					const descriptionElement = busElement.querySelector(
-						"div > span > a"
-					);
-					const description =
-						descriptionElement?.textContent
-							?.trim()
-							.split("-")
-							.slice(1)
-							.join("-") ?? "";
-
-					const timeElement = busElement.querySelector(
-						"div[style*=\"background-color\"]"
-					);
-					const time =
-						timeElement?.querySelector("span:first-child")?.textContent?.trim() ??
-						"";
-
-					const stopsElement = busElement.querySelector(
-						"div[style*=\"background-color\"]"
-					);
-					const stops =
-						stopsElement?.querySelector("span:last-child")?.textContent
-							?.trim()
-							.split(" ")[0] ?? "";
-
-					return { number, description, remainingTime: time, stopsLeft: stops };
+	const getClosestBusStations = () => {
+		if (toggleLocation && navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition((position) => {
+				setClosestBusStations([]);
+				setIsLoading(true);
+				AppService.getClosestBusStations(position.coords.latitude, position.coords.longitude).then((closestBusStations: BusStationInfo[]) => {
+					if (closestBusStations.length > 0) {
+						setClosestBusStations(closestBusStations);
+						setBusStationInfo(closestBusStations[0]);
+					} else {
+						setClosestBusStations([]);
+						setToggleLocation(false);
+						notify("Yakında hiç otobüs durağı görünmüyor. Lütfen tekrar deneyiniz.");
+					}
+				}).catch((error) => {
+					notify(`Servis hatası: ${error}`);
+				}).finally(() => {
+					setIsLoading(false);
 				});
+			}, (error) => {
+				notify(`Lütfen konum servislerinin açık olduğundan emin olun. Hata kodu : ${error.code}`);
+				setToggleLocation(false);
+			});
+		}
+	};
 
-				setupcomingBusses(buses);
+	useEffect(() => {
+		if (toggleLocation) {
+			getUpcomingBuses();
+		}
+	}, [busStationInfo]);
+
+	useEffect(() => {
+		getClosestBusStations();
+	}, [toggleLocation]);
+
+	const getUpcomingBuses = async () => {
+
+		setIsLoading(true);
+		setAllBusses([]);
+		setUpcomingBusses([]);
+
+		AppService.getUpcomingBuses(Number(busStationInfo.id)).then((response) => {
+			if (response) {
+				setUpcomingBusses(response.upcomingBusses);
+				setAllBusses(response.allBusses);
 			}
-
-			if (gecenDiv) {
-				const busElements = gecenDiv.querySelectorAll(".row.alert-info");
-				const buses: BusInfo[] = Array.from(busElements).map((busElement) => {
-					const numberElement = busElement.querySelector("div > span > a");
-					const number =
-						numberElement?.textContent?.trim().split("-")[0] ?? "";
-
-					const descriptionElement = busElement.querySelector(
-						"div > span > a"
-					);
-					const description =
-						descriptionElement?.textContent
-							?.trim()
-							.split("-")
-							.slice(1)
-							.join("-") ?? "";
-
-					return { number, description };
-				});
-
-				setAllBusses(buses);
-			}
-		} catch (error) {
+		}
+		).catch((error) => {
 			console.error(error);
-		} finally {
+			notify("Bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
+		}
+		).finally(() => {
 			setLastUpdateTime(new Date().toTimeString().split(" ")[0]);
 			setIsLoading(false);
-		}
+
+		});
+
 	};
 
 	return (
@@ -291,7 +161,7 @@ const App: React.FC = () => {
 						onChange={handleSelectChange}
 					>
 						<option value="">Durak Seçin</option>
-						{busStations.map((station) => (
+						{closestBusStations.map((station) => (
 							<option key={station.id} value={station.id}>
 								{station.name}
 							</option>
@@ -302,7 +172,7 @@ const App: React.FC = () => {
 			<div className="flex justify-between items-center">
 				<button
 					className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-4 rounded-lg w-full mr-3"
-					onClick={sendPostRequest}
+					onClick={getUpcomingBuses}
 					disabled={isLoading || !validateInput()}
 				>
 					{
@@ -336,7 +206,7 @@ const App: React.FC = () => {
 					}
 				</button>
 				<button className={"border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-2 rounded-lg " + (toggleLocation ? "bg-indigo-900 hover:bg-indigo-800 focus:bg-indigo-900" : "bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900")} disabled={isLoading}
-					onClick={handleToggleLocation}
+					onClick={() => setToggleLocation(!toggleLocation)}
 				>
 					📍
 				</button>
