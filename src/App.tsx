@@ -60,11 +60,11 @@ const App: React.FC = () => {
 		toast.dismiss();
 		toast(
 			(t) => (
-				<div className="flex items-center">
+				<div className="flex justify-between items-center">
 					<span>
 						{message}
 					</span>
-					<button className="p-1" onClick={() => toast.dismiss(t.id)}>
+					<button className="p-1 ml-5" onClick={() => toast.dismiss(t.id)}>
 						<svg
 							className="h-5 w-5 text-zinc-900"
 							xmlns="http://www.w3.org/2000/svg"
@@ -104,12 +104,12 @@ const App: React.FC = () => {
 					}
 				}).catch((error) => {
 					notify(`Servis hatası: ${error}`);
-				}).finally(() => {
 					setIsLoading(false);
 				});
-			}, (error) => {
-				notify(`Lütfen konum servislerinin açık olduğundan emin olun. Hata kodu : ${error.code}`);
+			}, () => {
+				notify("Lütfen konum servislerinin açık olduğundan emin olun.");
 				setToggleLocation(false);
+				setIsLoading(false);
 			});
 		}
 	};
