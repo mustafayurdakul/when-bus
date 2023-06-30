@@ -104,6 +104,7 @@ const App: React.FC = () => {
 					}
 				}).catch((error) => {
 					notify(`Servis hatası: ${error}`);
+				}).finally(() => {
 					setIsLoading(false);
 				});
 			}, () => {
@@ -205,7 +206,7 @@ const App: React.FC = () => {
 						)
 					}
 				</button>
-				<button className={"border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-2 rounded-lg " + (toggleLocation ? "bg-indigo-900 hover:bg-indigo-800 focus:bg-indigo-900" : "bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900")} disabled={isLoading}
+				<button className={"border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-2 rounded-lg " + (toggleLocation ? "bg-blue-900 hover:bg-blue-800 focus:bg-blue-900" : "bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900")} disabled={isLoading}
 					onClick={() => setToggleLocation(!toggleLocation)}
 				>
 					📍
