@@ -258,7 +258,7 @@ const App: React.FC = () => {
 					)
 				}
 				{
-					(upcomingBusses.length === 0 && allBusses.length === 0 && lastUpdateTime !== "")
+					(!isLoading && upcomingBusses.length === 0 && allBusses.length === 0 && lastUpdateTime !== "")
 					&& (
 						<>
 							<div className="text-sm text-center text-red-700 mb-4">
