@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import AppService from "./App.service";
+import BusCard from "./BusCard";
 import BusInfo from "./types/BusInfo";
 import BusStationInfo from "./types/BusStationInfo";
-import BusCard from "./BusCard";
 
 
 const App: React.FC = () => {
@@ -226,21 +226,23 @@ const App: React.FC = () => {
 					</button>
 					<button
 						className={
-							"p-2 rounded-xl " +
-							(toggleLocation ? "bg-indigo-600 dark:bg-indigo-600" : "bg-neutral-200 dark:bg-neutral-800")
+							"rounded-xl " +
+							(toggleLocation ? "text-white bg-indigo-600 dark:bg-indigo-600" : "text-neutral-800 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-800")
 						}
-						style={{ height: "40px", width: "40px" }}
+						style={{ height: "40px", width: "40px", minWidth: "40px" }}
 						disabled={isLoading}
 						onClick={() => setToggleLocation(!toggleLocation)}
 					>
-						<svg
-							baseProfile="tiny"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-							className="h-5 w-5 text-neutral-300 "
-						>
-							<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
-						</svg>
+						<div className="flex items-center justify-center">
+							<svg
+								baseProfile="tiny"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								className="h-6 w-6"
+							>
+								<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
+							</svg>
+						</div>
 					</button>
 				</div>
 				{
