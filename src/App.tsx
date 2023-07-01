@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import AppService from "./App.service";
 import BusInfo from "./types/BusInfo";
 import BusStationInfo from "./types/BusStationInfo";
+import BusCard from "./BusCard";
 
 
 const App: React.FC = () => {
@@ -82,7 +83,7 @@ const App: React.FC = () => {
 					</span>
 					<button className="p-1 ml-5" onClick={() => toast.dismiss(t.id)}>
 						<svg
-							className="h-5 w-5 text-zinc-900"
+							className="h-5 w-5 text-neutral-900"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 20 20"
 							fill="currentColor"
@@ -99,7 +100,7 @@ const App: React.FC = () => {
 			{
 				duration: 55000,
 				position: "bottom-center",
-				className: "bg-neutral-300 text-zinc-900 border border-neutral-300 rounded-lg text-xs"
+				className: "bg-neutral-300 text-neutral-900 rounded-xl text-xs"
 			}
 		);
 	};
@@ -165,14 +166,14 @@ const App: React.FC = () => {
 
 	return (
 		<div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 transition-colors duration-300">
-			<div className="container mx-auto max-w-md pt-1 pb-1 px-4 bg-neutral-100 text-zinc-900 dark:bg-neutral-950 dark:text-zinc-300">
+			<div className="container mx-auto max-w-md pt-1 pb-1 px-4 bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-300">
 				<h1 className="text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
 				<div className="mb-4">
 					{!toggleLocation ?
-						<input type="text" className="w-full bg-white text-zinc-900 dark:bg-neutral-900 dark:text-zinc-300 px-3 py-3 rounded-lg appearance-none text-xs" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
+						<input type="text" className="w-full bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 px-3 py-3 rounded-xl  appearance-none text-xs" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
 						/> :
 						<select
-							className="w-full bg-white text-zinc-900 dark:bg-neutral-900 dark:text-zinc-300 px-3 py-3 rounded-lg appearance-none text-xs"
+							className="w-full bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 px-3 py-3 rounded-xl  appearance-none text-xs"
 							value={busStationInfo.id}
 							onChange={handleSelectChange}
 						>
@@ -188,8 +189,8 @@ const App: React.FC = () => {
 				<div className="flex justify-between items-center">
 					<button
 						className="bg-blue-600 text-white
-					disabled:bg-neutral-200 disabled:text-zinc-400 dark:disabled:text-zinc-600 dark:disabled:bg-neutral-800
-					py-2 px-4 rounded-lg w-full mr-3"
+					disabled:bg-neutral-200 disabled:text-neutral-400 dark:disabled:text-neutral-600 dark:disabled:bg-neutral-800
+					py-2 px-4 rounded-xl w-full mr-3"
 						onClick={getUpcomingBuses}
 						disabled={isLoading || !validateInput()}
 					>
@@ -223,11 +224,23 @@ const App: React.FC = () => {
 							)
 						}
 					</button>
-					<button className={"py-2 px-2 rounded-lg" + (toggleLocation ? " bg-indigo-600 dark:bg-indigo-600" : " bg-neutral-200 dark:bg-neutral-800")}
+					<button
+						className={
+							"p-2 rounded-xl " +
+							(toggleLocation ? "bg-indigo-600 dark:bg-indigo-600" : "bg-neutral-200 dark:bg-neutral-800")
+						}
+						style={{ height: "40px", width: "40px" }}
 						disabled={isLoading}
 						onClick={() => setToggleLocation(!toggleLocation)}
 					>
-						📍
+						<svg
+							baseProfile="tiny"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							className="h-5 w-5 text-neutral-300 "
+						>
+							<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
+						</svg>
 					</button>
 				</div>
 				{
