@@ -9,7 +9,7 @@ type BusCardProps = {
 
 const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, stopsLeft }) => {
 	return (
-		<div className="bg-neutral-900 border border-neutral-900 text-zinc-300 shadow p-4 rounded-lg mb-4 relative">
+		<div className="bg-neutral-900 text-zinc-300 p-4 rounded mb-4 relative">
 			<div className="flex flex-col w-9/12">
 				<span className="font-bold text-lg">{number}</span>
 				<span className="text-xs opacity-75">{description}</span>

@@ -83,7 +83,7 @@ const App: React.FC = () => {
 			{
 				duration: 55000,
 				position: "bottom-center",
-				className: "bg-neutral-300 text-zinc-900 border border-neutral-300 shadow rounded-lg text-xs"
+				className: "bg-neutral-300 text-zinc-900 rounded text-xs"
 			}
 		);
 	};
@@ -154,10 +154,10 @@ const App: React.FC = () => {
 			<h1 className="text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
 			<div className="mb-4">
 				{!toggleLocation ?
-					<input type="text" className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-3 rounded-lg appearance-none text-xs text-zinc-300" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
+					<input type="text" className="w-full bg-neutral-900 px-3 py-3 rounded appearance-none text-xs text-zinc-300" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
 					/> :
 					<select
-						className="w-full border border-neutral-900 shadow bg-neutral-900 px-3 py-3 rounded-lg appearance-none text-xs text-zinc-300"
+						className="w-full bg-neutral-900 px-3 py-3 rounded appearance-none text-xs text-zinc-300"
 						value={busStationInfo.id}
 						onChange={handleSelectChange}
 					>
@@ -172,7 +172,7 @@ const App: React.FC = () => {
 			</div>
 			<div className="flex justify-between items-center">
 				<button
-					className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-4 rounded-lg w-full mr-3"
+					className="bg-blue-900 hover:bg-blue-800 focus:bg-blue-900 disabled:bg-neutral-900 py-2 px-4 rounded w-full mr-3"
 					onClick={getUpcomingBuses}
 					disabled={isLoading || !validateInput()}
 				>
@@ -206,7 +206,7 @@ const App: React.FC = () => {
 						)
 					}
 				</button>
-				<button className={"border border-neutral-900 shadow disabled:bg-neutral-900 py-2 px-2 rounded-lg " + (toggleLocation ? "bg-blue-900 hover:bg-blue-800 focus:bg-blue-900" : "bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900")} disabled={isLoading}
+				<button className={"disabled:bg-neutral-900 py-2 px-2 rounded " + (toggleLocation ? "bg-blue-900 hover:bg-blue-800 focus:bg-blue-900" : "bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-900")} disabled={isLoading}
 					onClick={() => setToggleLocation(!toggleLocation)}
 				>
 					📍
@@ -222,7 +222,7 @@ const App: React.FC = () => {
 			<div className="mt-4">
 				{
 					upcomingBusses.length > 0 && (
-						<div className="border-t border-neutral-900 shadow pt-4">
+						<div className="border-t border-neutral-900 pt-4">
 
 							<div className="flex justify-between items-baseline">
 								<h2 className="text-lg font-bold mb-4">Yaklaşan Otobüsler</h2>
@@ -241,7 +241,7 @@ const App: React.FC = () => {
 				}
 				{
 					allBusses.length > 0 && (
-						<div className="border-t border-neutral-900 shadow pt-4">
+						<div className="border-t border-neutral-900 pt-4">
 							<div className="flex justify-between items-baseline">
 								<h2 className="text-lg font-bold mb-4">Tüm Otobüsler</h2>
 								{
@@ -265,7 +265,7 @@ const App: React.FC = () => {
 							<div className="text-sm text-center text-red-700 mb-4">
 								Veri bulunamadı. Lütfen durak numarasını kontrol edin.
 							</div>
-							<div className="border-t border-neutral-900 shadow pt-4 my-4">
+							<div className="border-t border-neutral-900 pt-4 my-4">
 								<div className="text-xs">
 									Durak numarası genellikle 5 haneli bir sayıdır ve duraklarda bulunan numaralı levhalarda yazmaktadır. Durak numarası bilgisine <a className="text-blue-700" href="https://www.kocaeli.bel.tr/tr/main/hatlar">kocaeli.bel.tr</a> sitesinden de ulaşabilirsiniz.
 								</div>
@@ -275,7 +275,7 @@ const App: React.FC = () => {
 					)
 				}
 			</div>
-			<div className="text-xs border-t border-neutral-900 italic shadow pt-4 my-4">
+			<div className="text-xs border-t border-neutral-900 italic pt-4 my-4">
 				Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
 			</div>
 			<Toaster />
