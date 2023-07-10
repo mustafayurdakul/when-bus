@@ -171,7 +171,7 @@ const App: React.FC = () => {
 	return (
 		<div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 transition-colors duration-300">
 			<div className="container mx-auto max-w-md pt-1 pb-1 px-4 bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-300">
-				<h1 className="text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
+				<h1 className="select-none text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
 				<div className="mb-4">
 					{!toggleLocation ?
 						<input type="text" className="w-full bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 px-3 py-3 rounded-xl  appearance-none text-xs" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
