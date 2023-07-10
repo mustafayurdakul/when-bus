@@ -13,15 +13,19 @@ const App: React.FC = () => {
 		const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 		const themeColorMeta = document.getElementById("theme-color-meta") as HTMLMetaElement;
 
+		const html = document.documentElement;
+
 		if (prefersDarkMode) {
 			document.documentElement.classList.add("dark");
 			if (themeColorMeta) {
 				themeColorMeta.content = "#0a0a0a";
+				html.style.backgroundColor = "#0a0a0a";
 			}
 		} else {
 			document.documentElement.classList.remove("dark");
 			if (themeColorMeta) {
 				themeColorMeta.content = "rgb(245 245 245)";
+				html.style.backgroundColor = "rgb(245 245 245)";
 			}
 		}
 	}, []);
