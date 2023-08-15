@@ -110,10 +110,11 @@ const App: React.FC = () => {
 	};
 
 	const getClosestBusStations = () => {
+		setIsLoading(true);
+
 		if (toggleLocation && navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition((position) => {
 				setClosestBusStations([]);
-				setIsLoading(true);
 				AppService.getClosestBusStations(position.coords.latitude, position.coords.longitude).then((closestBusStations: BusStationInfo[]) => {
 					if (closestBusStations.length > 0) {
 						setClosestBusStations(closestBusStations);
@@ -133,6 +134,9 @@ const App: React.FC = () => {
 				setToggleLocation(false);
 				setIsLoading(false);
 			});
+		} else {
+			setToggleLocation(false);
+			setIsLoading(false);
 		}
 	};
 
