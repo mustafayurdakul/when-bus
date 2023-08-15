@@ -178,7 +178,7 @@ const App: React.FC = () => {
 				<h1 className="select-none text-2xl font-bold my-5 text-center">Ne Zaman Otobüs 🚌 ⏰</h1>
 				<div className="mb-4">
 					{!toggleLocation ?
-						<input type="text" className="w-full bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 px-3 py-3 rounded-xl  appearance-none text-xs" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
+						<input type="text" className="w-full bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 px-3 py-3 rounded-xl appearance-none text-xs" placeholder="Durak Numarası (Örnek: 30374)" value={busStationInfo.id} onChange={handleInputChange}
 						/> :
 						<select
 							className="w-full bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 px-3 py-3 rounded-xl  appearance-none text-xs"
@@ -235,7 +235,8 @@ const App: React.FC = () => {
 					<button
 						className={
 							"rounded-xl " +
-							(toggleLocation ? "text-white bg-indigo-600 dark:bg-indigo-600" : "text-neutral-800 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-800")
+							(toggleLocation ? "text-white bg-indigo-600 dark:bg-indigo-600" : "text-neutral-800 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-800") +
+							" disabled:bg-neutral-200 disabled:text-neutral-400 dark:disabled:text-neutral-600 dark:disabled:bg-neutral-800"
 						}
 						style={{ height: "40px", width: "40px", minWidth: "40px" }}
 						disabled={isLoading}
