@@ -2,7 +2,8 @@ type BusInfoDetail = {
 	name: string;
 	stations: {
 		code: string,
-		name: string
+		name: string,
+		location: string
 	}[]
 }
 

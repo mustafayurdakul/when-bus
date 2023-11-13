@@ -30,7 +30,7 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 			setBusDetails([]);
 		}
 	}, [isDetailsOpen]);
-	
+
 
 	return (
 		<div className="bg-neutral-200 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 p-4 rounded-xl mb-4">
@@ -92,7 +92,7 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 										detail.stations.map((station, index) => (
 											<div className="flex flex-row justify-between text-xs mb-2" key={station.code + index}>
 												<span>{station.name}</span>
-												<span className="font-mono">{station.code}</span>
+												<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
 											</div>
 										))
 									}
