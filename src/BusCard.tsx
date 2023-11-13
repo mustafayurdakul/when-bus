@@ -13,24 +13,29 @@ type BusCardProps = {
 const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, stopsLeft }) => {
 
 	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-	const [busDetails, setBusDetails] = useState<BusInfoDetail[]>([]);
+
+	const [firstDestination, setFirstDestination] = useState<BusInfoDetail>();
+	const [secondDestination, setSecondDestination] = useState<BusInfoDetail>();
+
+	const [destinationIndex, setDestinationIndex] = useState(true);
 
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		if (isDetailsOpen) {
 			setIsLoading(true);
-			AppService.getBusStationDetail(number).then((res) => {
-				setBusDetails(res);
+			AppService.getBusStationDetail(number).then((response: BusInfoDetail[]) => {
+				setFirstDestination(response[0]);
+				setSecondDestination(response[1]);
 			}).finally(() => {
 				setIsLoading(false);
 			});
 		} else {
 			setIsLoading(false);
-			setBusDetails([]);
+			setFirstDestination(undefined);
+			setSecondDestination(undefined);
 		}
 	}, [isDetailsOpen]);
-
 
 	return (
 		<div className="bg-neutral-200 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 p-4 rounded-xl mb-4">
@@ -83,11 +88,33 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 						</svg>
 					</div> : <div className="flex flex-col border-t border-neutral-300 dark:border-neutral-700 mt-4">
 						{
-							busDetails.map((detail, index) => (
-								detail.stations.length > 0 && <div className="flex flex-col mt-5 text-xs border-b border-neutral-300 dark:border-neutral-700 pb-4" key={detail.name + index}>
+							destinationIndex ? (firstDestination && firstDestination.stations.length > 0) && <div className="flex flex-col mt-5 text-xs border-b border-neutral-300 dark:border-neutral-700 pb-4">
+								{
+									firstDestination.name && <div className="flex flex-row justify-between">
+										<span className="font-bold text-sm text-underline mb-5" onClick={() => { setDestinationIndex(!destinationIndex); }}>{firstDestination.name}</span>
+										<svg
+											baseProfile="tiny"
+											viewBox="0 0 24 24"
+											fill="#e74c3c"
+											className="h-5 w-5"
+										>
+											<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
+										</svg>
+									</div>
+								}
+								{
+									firstDestination.stations.map((station, index) => (
+										<div className="flex flex-row justify-between text-xs mb-2" key={station.code + index}>
+											<span>{station.name}</span>
+											<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
+										</div>
+									))
+								}
+							</div> :
+								(secondDestination && secondDestination.stations.length > 0) && <div className="flex flex-col mt-5 text-xs border-b border-neutral-300 dark:border-neutral-700 pb-4">
 									{
-										detail.name && <div className="flex flex-row justify-between">
-											<span className="font-bold text-sm text-underline mb-5">{detail.name}</span>
+										secondDestination.name && <div className="flex flex-row justify-between">
+											<span className="font-bold text-sm text-underline mb-5" onClick={() => { setDestinationIndex(!destinationIndex); }}>{secondDestination.name}</span>
 											<svg
 												baseProfile="tiny"
 												viewBox="0 0 24 24"
@@ -99,7 +126,7 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 										</div>
 									}
 									{
-										detail.stations.map((station, index) => (
+										secondDestination.stations.map((station, index) => (
 											<div className="flex flex-row justify-between text-xs mb-2" key={station.code + index}>
 												<span>{station.name}</span>
 												<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
@@ -107,7 +134,6 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 										))
 									}
 								</div>
-							))
 						}
 						<button className="text-sm mt-4 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-300 p-2 rounded-xl" onClick={() => setIsDetailsOpen(!isDetailsOpen)}>
 							Detayları Gizle
