@@ -86,7 +86,17 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 							busDetails.map((detail, index) => (
 								detail.stations.length > 0 && <div className="flex flex-col mt-5 text-xs border-b border-neutral-300 dark:border-neutral-700 pb-4" key={detail.name + index}>
 									{
-										detail.name && <span className="font-bold text-sm text-underline mb-5">{detail.name}</span>
+										detail.name && <div className="flex flex-row justify-between">
+											<span className="font-bold text-sm text-underline mb-5">{detail.name}</span>
+											<svg
+												baseProfile="tiny"
+												viewBox="0 0 24 24"
+												fill="#e74c3c"
+												className="h-5 w-5"
+											>
+												<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
+											</svg>
+										</div>
 									}
 									{
 										detail.stations.map((station, index) => (
