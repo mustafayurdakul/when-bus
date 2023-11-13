@@ -69,9 +69,6 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 									</div>
 								))
 							}
-							<div>
-
-							</div>
 						</div>
 						<button className="text-sm mt-4 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-300 p-2 rounded-xl" onClick={() => setIsDetailsOpen(!isDetailsOpen)}>
 							{isDetailsOpen ? "Detayları Gizle" : "Detayları Göster"}
