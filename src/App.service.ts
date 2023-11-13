@@ -1,10 +1,12 @@
 import axios from "axios";
 
 import BusInfo from "./types/BusInfo";
+import BusInfoDetail from "./types/BusInfoDetail";
 import BusStationInfo from "./types/BusStationInfo";
 import ClosestBusStationsResponse from "./types/responses/ClosestBusStationsResponse";
 
 const url = "https://www.e-komobil.com";
+const detailUrl = "https://www.kocaeli.bel.tr/tr/main/hatlar/";
 
 class AppService {
 
@@ -88,6 +90,7 @@ class AppService {
 				const descriptionElement = busElement.querySelector(
 					"div > span > a"
 				);
+
 				const description =
 					descriptionElement?.textContent
 						?.trim()
@@ -138,6 +141,53 @@ class AppService {
 		}
 
 		return { upcomingBusses, allBusses };
+	}
+
+	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
+
+		const response = await axios.get(
+			`${detailUrl}/${station}`
+		);
+
+		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
+
+		return busInfoDetail;
+	}
+
+	private parseBusInfoDetail = (container: Element): BusInfoDetail => {
+		const name = container.querySelector("h3")?.textContent?.trim() || "";
+		const stations = Array.from(container.querySelectorAll("tbody tr")).map((row) => {
+			const columns = row.querySelectorAll("th");
+			const code = columns[1]?.textContent?.trim() || "";
+			const stationName = columns[2]?.textContent?.trim() || "";
+			const location = columns[2]?.querySelector("a")?.getAttribute("href") || "";
+
+			return { code, name: stationName, location };
+		});
+
+		return { name, stations };
+	};
+
+	private parseBusStationDetailResponse(data: string): BusInfoDetail[] {
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(data, "text/html");
+
+		const stationsElement = doc.getElementById("duraklar");
+		const stations = stationsElement?.querySelector(".tramvay-station");
+
+		if (stations) {
+			const station1 = stations.querySelector(".col-md-6:nth-child(1)");
+			const station2 = stations.querySelector(".col-md-6:nth-child(2)");
+
+			if (station1 && station2) {
+				const stationInfo1 = this.parseBusInfoDetail(station1);
+				const stationInfo2 = this.parseBusInfoDetail(station2);
+
+				return [stationInfo1, stationInfo2];
+			}
+		}
+
+		return [];
 	}
 
 }
