@@ -19,13 +19,18 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 
 	useEffect(() => {
 		if (isDetailsOpen) {
+			setIsLoading(true);
 			AppService.getBusStationDetail(number).then((res) => {
 				setBusDetails(res);
+			}).finally(() => {
+				setIsLoading(false);
 			});
 		} else {
+			setIsLoading(false);
 			setBusDetails([]);
 		}
 	}, [isDetailsOpen]);
+	
 
 	return (
 		<div className="bg-neutral-200 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 p-4 rounded-xl mb-4">
@@ -53,8 +58,30 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 				}
 			</div>
 			{
-				(isDetailsOpen) && (
-					!isLoading ? <div className="flex flex-col border-t border-neutral-300 dark:border-neutral-700 mt-4">
+				isDetailsOpen && (
+					isLoading ? <div className="flex flex-row justify-center items-center mt-4">
+						<span className="mr-2">Yükleniyor</span>
+						<svg
+							className="animate-spin h-5 w-5 "
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								className="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								strokeWidth="4"
+							></circle>
+							<path
+								className="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+					</div> : <div className="flex flex-col border-t border-neutral-300 dark:border-neutral-700 mt-4">
 						{
 							busDetails.map((detail, index) => (
 								detail.stations.length > 0 && <div className="flex flex-col mt-5 text-xs border-b border-neutral-300 dark:border-neutral-700 pb-4" key={detail.name + index}>
@@ -73,32 +100,9 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 							))
 						}
 						<button className="text-sm mt-4 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-300 p-2 rounded-xl" onClick={() => setIsDetailsOpen(!isDetailsOpen)}>
-							{isDetailsOpen ? "Detayları Gizle" : "Detayları Göster"}
+							Detayları Gizle
 						</button>
-					</div> :
-						<div className="flex flex-row justify-center items-center mt-4">
-							<span className="mr-2">Yükleniyor</span>
-							<svg
-								className="animate-spin h-5 w-5 "
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<circle
-									className="opacity-25"
-									cx="12"
-									cy="12"
-									r="10"
-									stroke="currentColor"
-									strokeWidth="4"
-								></circle>
-								<path
-									className="opacity-75"
-									fill="currentColor"
-									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-								></path>
-							</svg>
-						</div>
+					</div>
 				)
 			}
 		</div>
