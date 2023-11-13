@@ -6,7 +6,7 @@ import BusStationInfo from "./types/BusStationInfo";
 import ClosestBusStationsResponse from "./types/responses/ClosestBusStationsResponse";
 
 const url = "https://www.e-komobil.com";
-const detailUrl = "https://www.kocaeli.bel.tr/tr/main/hatlar/";
+const detailUrl = "https://www.kocaeli.bel.tr/tr/main/hatlar";
 
 class AppService {
 
