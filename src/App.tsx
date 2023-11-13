@@ -333,7 +333,7 @@ const App: React.FC = () => {
 									)
 								}
 							</div>
-							<div className="text-xs border-t border-neutral-200 dark:border-neutral-800 pt-4 pt-4 my-4">
+							<div className="text-xs border-t border-neutral-200 dark:border-neutral-800 pt-4 my-4">
 								Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
 							</div>
 						</>
@@ -341,11 +341,24 @@ const App: React.FC = () => {
 				}
 				{
 					(share === 5) && (
-						<>
-							<div className="flex justify-center items-center bg-neutral-400 dark:bg-neutral-400 p-4 rounded mb-4 w-48 mx-auto shadow-lg">
+						<div className="flex flex-row items-center justify-center border-t border-b border-neutral-200 dark:border-neutral-800 py-4">
+							<div className="mr-4 bg-white dark:bg-neutral-300 p-2 rounded shadow">
 								<img src={require("./Code.png")} alt="Share" className="w-48" />
 							</div>
-						</>
+							<div className="flex flex-col text-xs">
+								<span className="mb-2">
+									Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
+								</span>
+								<span className="mb-2">
+									<a href="https://mustafayurdakul.github.io/when-bus/" className="text-neutral-700"
+									>mustafayurdakul.github.io/when-bus</a>
+								</span>
+								<span>
+									<a href="mailto:mustafa@yurdakul.dev" className="text-neutral-700"
+									>mustafa@yurdakul.dev</a>
+								</span>
+							</div>
+						</div>
 					)
 				}
 			</div>
