@@ -8,10 +8,9 @@ type BusCardProps = {
 	description?: string;
 	remainingTime?: string;
 	stopsLeft?: string;
-	detalis?: BusInfoDetail;
 };
 
-const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, stopsLeft, detalis }) => {
+const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, stopsLeft }) => {
 
 	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 	const [busDetails, setBusDetails] = useState<BusInfoDetail[]>([]);
@@ -60,7 +59,7 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 									<div className="flex flex-col mt-4 text-xs border-b border-neutral-300 dark:border-neutral-700 pb-4" key={detail.name}>
 										<span className="font-bold text-sm text-underline mb-5">{detail.name}</span>
 										{
-											detail.stations.map((station, index) => (
+											detail.stations.map((station) => (
 												<div className="flex flex-row justify-between text-xs mb-1" key={station.code}>
 													<span>{station.name}</span>
 													<span>{station.code}</span>
