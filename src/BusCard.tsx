@@ -8,9 +8,10 @@ type BusCardProps = {
 	description?: string;
 	remainingTime?: string;
 	stopsLeft?: string;
+	handleClickStation?: (stationCode: string) => void;
 };
 
-const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, stopsLeft }) => {
+const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, stopsLeft, handleClickStation }) => {
 
 	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -112,8 +113,9 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 								{
 									firstDestination.stations.map((station, index) => (
 										<div className="flex flex-row justify-between text-xs mb-3" key={station.code + index}>
-											<span>{station.name}</span>
-											<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
+											<span onClick={() => { window.open(station.location); }}>{station.name}</span>
+											<span onClick={() => { handleClickStation && handleClickStation(station.code); }}
+												className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500">{station.code}</span>
 										</div>
 									))
 								}
@@ -142,8 +144,9 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 									{
 										secondDestination.stations.map((station, index) => (
 											<div className="flex flex-row justify-between text-xs mb-3" key={station.code + index}>
-												<span>{station.name}</span>
-												<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
+												<span onClick={() => { window.open(station.location); }}>{station.name}</span>
+												<span onClick={() => { handleClickStation && handleClickStation(station.code); }}
+													className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500">{station.code}</span>
 											</div>
 										))
 									}

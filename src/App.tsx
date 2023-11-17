@@ -153,7 +153,7 @@ const App: React.FC = () => {
 	};
 
 	useEffect(() => {
-		if (toggleLocation) {
+		if (toggleLocation || busStationInfo.id.length === 5) {
 			getUpcomingBuses();
 		}
 	}, [busStationInfo]);
@@ -292,7 +292,7 @@ const App: React.FC = () => {
 												}
 											</div>
 											{upcomingBusses.map((item, index) => (
-												<BusCard key={index} {...item}></BusCard>
+												<BusCard key={index} {...item} handleClickStation={(station: string) => setBusStationInfo({ id: station })}></BusCard>
 											))}
 										</div>
 									)
@@ -310,7 +310,7 @@ const App: React.FC = () => {
 												}
 											</div>					{
 												allBusses.map((item, index) => (
-													<BusCard key={index} {...item}></BusCard>
+													<BusCard key={index} {...item} handleClickStation={(station: string) => setBusStationInfo({ id: station })}></BusCard>
 												))
 											}
 										</div>
