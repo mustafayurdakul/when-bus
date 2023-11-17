@@ -292,7 +292,10 @@ const App: React.FC = () => {
 												}
 											</div>
 											{upcomingBusses.map((item, index) => (
-												<BusCard key={index} {...item} handleClickStation={(station: string) => setBusStationInfo({ id: station })}></BusCard>
+												<BusCard key={index} {...item} handleClickStation={({id, name}) => {
+													setBusStationInfo({ id: id, name: name });
+													setToggleLocation(false);
+												}}></BusCard>
 											))}
 										</div>
 									)
@@ -310,7 +313,10 @@ const App: React.FC = () => {
 												}
 											</div>					{
 												allBusses.map((item, index) => (
-													<BusCard key={index} {...item} handleClickStation={(station: string) => setBusStationInfo({ id: station })}></BusCard>
+													<BusCard key={index} {...item} handleClickStation={({id, name}) => {
+														setBusStationInfo({ id: id, name: name });
+														setToggleLocation(false);
+													}}></BusCard>
 												))
 											}
 										</div>
