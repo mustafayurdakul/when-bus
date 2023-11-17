@@ -159,7 +159,9 @@ const App: React.FC = () => {
 	}, [busStationInfo]);
 
 	useEffect(() => {
-		getClosestBusStations();
+		if (toggleLocation) {
+			getClosestBusStations();
+		}
 	}, [toggleLocation]);
 
 	const getUpcomingBuses = async () => {
