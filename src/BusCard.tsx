@@ -104,7 +104,7 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 								}
 								{
 									firstDestination.stations.map((station, index) => (
-										<div className="flex flex-row justify-between text-xs mb-2" key={station.code + index}>
+										<div className="flex flex-row justify-between text-xs mb-3" key={station.code + index}>
 											<span>{station.name}</span>
 											<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
 										</div>
@@ -127,7 +127,7 @@ const BusCard: React.FC<BusCardProps> = ({ number, description, remainingTime, s
 									}
 									{
 										secondDestination.stations.map((station, index) => (
-											<div className="flex flex-row justify-between text-xs mb-2" key={station.code + index}>
+											<div className="flex flex-row justify-between text-xs mb-3" key={station.code + index}>
 												<span>{station.name}</span>
 												<span className="font-mono cursor-pointer text-neutral-400 dark:text-neutral-500" onClick={() => { window.open(station.location); }}>{station.code}</span>
 											</div>
