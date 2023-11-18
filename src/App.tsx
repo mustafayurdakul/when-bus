@@ -5,6 +5,8 @@ import AppService from "./App.service";
 import BusCard from "./BusCard";
 import BusInfo from "./types/BusInfo";
 import BusStationInfo from "./types/BusStationInfo";
+import SharePage from "./pages/SharePage";
+import CustomButton from "./components/CustomButton";
 
 
 const App: React.FC = () => {
@@ -212,65 +214,32 @@ const App: React.FC = () => {
 									</select>
 								}
 							</div>
-							<div className="flex justify-between items-center">
-								<button
-									className="bg-blue-600 text-white
-					disabled:bg-neutral-200 disabled:text-neutral-400 dark:disabled:text-neutral-600 dark:disabled:bg-neutral-800
-					py-2 px-4 rounded-xl w-full mr-3"
-									onClick={getUpcomingBuses}
-									disabled={isLoading || !validateInput()}
-								>
-									{
-										isLoading ? (
-											<div className="flex items-center justify-center">
-												<span className="mr-2">Yükleniyor</span>
-												<svg
-													className="animate-spin h-5 w-5 "
-													xmlns="http://www.w3.org/2000/svg"
-													fill="none"
-													viewBox="0 0 24 24"
-												>
-													<circle
-														className="opacity-25"
-														cx="12"
-														cy="12"
-														r="10"
-														stroke="currentColor"
-														strokeWidth="4"
-													></circle>
-													<path
-														className="opacity-75"
-														fill="currentColor"
-														d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-													></path>
-												</svg>
-											</div>
-										) : (
-											"İstek Gönder"
-										)
-									}
-								</button>
-								<button
-									className={
-										"rounded-xl " +
-										(toggleLocation ? "text-white bg-indigo-600 dark:bg-indigo-600" : "text-neutral-800 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-800") +
-										" disabled:bg-neutral-200 disabled:text-neutral-400 dark:disabled:text-neutral-600 dark:disabled:bg-neutral-800"
-									}
-									style={{ height: "40px", width: "40px", minWidth: "40px" }}
+							<div className="flex space-x-1">
+								<CustomButton
+									size="medium"
+									rounded="xl"
+									loading={isLoading}
+									disabled={!validateInput()}
+									onClick={() => getUpcomingBuses()}>
+									Sorgula
+								</CustomButton>
+								<CustomButton
+									variant={toggleLocation ? "success" : "secondary"}
+									size="medium"
+									rounded="xl"
+									className="w-1/6"
 									disabled={isLoading}
 									onClick={() => setToggleLocation(!toggleLocation)}
 								>
-									<div className="flex items-center justify-center">
-										<svg
-											baseProfile="tiny"
-											viewBox="0 0 24 24"
-											fill="currentColor"
-											className="h-6 w-6"
-										>
-											<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
-										</svg>
-									</div>
-								</button>
+									<svg
+										baseProfile="tiny"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+										className="h-6 w-6"
+									>
+										<path d="M10.368 19.102c.349 1.049 1.011 1.086 1.478.086l5.309-11.375c.467-1.002.034-1.434-.967-.967L4.812 12.154c-1.001.467-.963 1.129.085 1.479L9 15l1.368 4.102z" />
+									</svg>
+								</CustomButton>
 							</div>
 							{
 								lastUpdateTime !== "" && (upcomingBusses.length > 0 || allBusses.length > 0) && (
@@ -294,7 +263,7 @@ const App: React.FC = () => {
 												}
 											</div>
 											{upcomingBusses.map((item, index) => (
-												<BusCard key={index} {...item} handleClickStation={({id, name}) => {
+												<BusCard key={index} {...item} handleClickStation={({ id, name }) => {
 													setBusStationInfo({ id: id, name: name });
 													setToggleLocation(false);
 												}}></BusCard>
@@ -315,7 +284,7 @@ const App: React.FC = () => {
 												}
 											</div>					{
 												allBusses.map((item, index) => (
-													<BusCard key={index} {...item} handleClickStation={({id, name}) => {
+													<BusCard key={index} {...item} handleClickStation={({ id, name }) => {
 														setBusStationInfo({ id: id, name: name });
 														setToggleLocation(false);
 													}}></BusCard>
@@ -348,26 +317,7 @@ const App: React.FC = () => {
 					)
 				}
 				{
-					(share === 5) && (
-						<div className="flex flex-row items-center justify-center border-t border-b border-neutral-200 dark:border-neutral-800 py-4">
-							<div className="mr-4 bg-white dark:bg-neutral-300 p-2 rounded shadow">
-								<img src={require("./Code.png")} alt="Share" className="w-48" />
-							</div>
-							<div className="flex flex-col text-xs">
-								<span className="mb-2">
-									Bu uygulama Mustafa Yurdakul tarafından yapılmıştır. Kaynak kodlarına <a className="text-blue-700" href="https://github.com/mustafayurdakul/when-bus">GitHub</a> üzerinden ulaşabilirsiniz.
-								</span>
-								<span className="mb-2">
-									<a href="https://mustafayurdakul.github.io/when-bus/" className="text-neutral-700"
-									>mustafayurdakul.github.io/when-bus</a>
-								</span>
-								<span>
-									<a href="mailto:mustafa@yurdakul.dev" className="text-neutral-700"
-									>mustafa@yurdakul.dev</a>
-								</span>
-							</div>
-						</div>
-					)
+					(share === 5) && <SharePage />
 				}
 			</div>
 			<Toaster />
