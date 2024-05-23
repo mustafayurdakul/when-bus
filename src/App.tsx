@@ -119,7 +119,7 @@ function App() {
 
 				<div className="flex justify-between items-center">
 					<Switch isSelected={toggleLocation} onChange={(value) => setToggleLocation(value)} isDisabled={isLoading}>
-						Location
+						Konum
 					</Switch>
 					{
 						!isLoading && lastUpdateTime && <Label> Son Güncelleme Zamanı: {lastUpdateTime}
