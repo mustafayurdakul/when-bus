@@ -12,4 +12,4 @@
 
 ## Nasıl kullanacağız?
 
-Şu an [mustafayurdakul.github.io/when-bus/](https://mustafayurdakul.github.io/when-bus/) adresinden ulaşabilirsiniz. 
+Şu an [mustafayurdakul.github.io/when-bus/](https://mustafayurdakul.github.io/when-bus/) adresinden ulaşabilirsiniz.
