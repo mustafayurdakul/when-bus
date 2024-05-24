@@ -30,5 +30,5 @@ module.exports = {
 			"error",
 			"always"
 		]
-	},
+	}
 }

@@ -136,7 +136,7 @@ function App() {
 						<Label className="text-xl">Yaklaşan Otobüsler</Label>
 						<GridList selectionMode="none">
 							{upcomingBusses.map((bus, index) => (
-								<GridListItem key={index} >
+								<GridListItem key={index}>
 									<div className="flex justify-between items-center w-full">
 										<div className="max-w-[75%] space-y-1">
 											<div className="text-2xl">
