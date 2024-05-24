@@ -159,7 +159,6 @@ function App() {
 					</>
 				}
 
-
 				{allBusses.length > 0 &&
 					<>
 						<Label className="text-xl">Tüm Otobüsler</Label>
