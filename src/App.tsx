@@ -186,7 +186,7 @@ function App() {
 				}
 			</div>
 			<div className="flex justify-center items-center mt-5">
-				<Label className="text-sm">Bu uygulamayı <a className="text-blue-500" href="linkedin.com/in/mustafayurdakul" target="_blank" rel="noreferrer">ben</a> yaptım. Kaynak kodlarına <a className="text-blue-500" href="github.com/mustafayurdakul/when-bus" target="_blank" rel="noreferrer">GitHub</a> üzerinden ulaşabilirsin. 🖖</Label>
+				<Label className="text-sm">Bu uygulamayı <a className="text-blue-500" href="https://linkedin.com/in/mustafayurdakul" target="_blank" rel="noreferrer">ben</a> yaptım. Kaynak kodlarına <a className="text-blue-500" href="https://github.com/mustafayurdakul/when-bus" target="_blank" rel="noreferrer">GitHub</a> üzerinden ulaşabilirsin. 🖖</Label>
 			</div>
 		</div >
 	);
