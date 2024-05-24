@@ -102,7 +102,6 @@ function App() {
 						<Label className="text-3xl">Ne Zaman Otobüs?</Label>
 						<Label className="text-xs">Bulunduğunuz yere yaklaşan otobüsleri öğrenin.</Label>
 					</div>
-					<Label className="text-xs">v2.1</Label>
 				</div>
 
 				{
