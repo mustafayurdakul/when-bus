@@ -3,7 +3,7 @@
 **Kocaeli'nde** otobüs durağına gelen otobüsleri görüntüleyebileceğiniz bir web uygulaması. Neden mi? Ulaşması daha kolay.
 
 <p align="center">
-  <img src="https://i.hizliresim.com/6hf6t6i.png" width=450>
+  <img src="https://i.hizliresim.com/tnsrmhv.png" width=450>
 </p>
 
 ### Neler kullanıldı?
