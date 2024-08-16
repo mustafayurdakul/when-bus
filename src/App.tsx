@@ -1,15 +1,6 @@
 import { Key, useEffect, useState } from "react";
-
-import BusInfo from "./types/BusInfo";
-import BusStationInfo from "./types/BusStationInfo";
-import busService from "./services/bus.service";
-
-import { Button } from "./aria-components/Button";
-import { Switch } from "./aria-components/Switch";
-import { Select, SelectItem } from "./aria-components/Select";
-import { SearchField } from "./aria-components/SearchField";
-import { GridList, GridListItem } from "./aria-components/GridList";
-import { Label } from "./aria-components/Field";
+import BusInfo from "./types/BusInfo"; import BusStationInfo from "./types/BusStationInfo"; import busService from "./services/bus.service";
+import { Button } from "./aria-components/Button"; import { Switch } from "./aria-components/Switch"; import { Select, SelectItem } from "./aria-components/Select"; import { SearchField } from "./aria-components/SearchField"; import { GridList, GridListItem } from "./aria-components/GridList"; import { Label } from "./aria-components/Field";
 
 function App() {
 

@@ -6,31 +6,31 @@ import {
 	CalendarGridBody,
 	DateValue,
 	Text
-} from "react-aria-components";
-import { tv } from "tailwind-variants";
-import { CalendarGridHeader, CalendarHeader } from "./Calendar";
-import { focusRing } from "./utils";
+} from 'react-aria-components';
+import { tv } from 'tailwind-variants';
+import { CalendarGridHeader, CalendarHeader } from './Calendar';
+import { focusRing } from './utils';
 
-export interface RangeCalendarProps<T extends DateValue> extends Omit<AriaRangeCalendarProps<T>, "visibleDuration"> {
+export interface RangeCalendarProps<T extends DateValue> extends Omit<AriaRangeCalendarProps<T>, 'visibleDuration'> {
 	errorMessage?: string;
 }
 
 const cell = tv({
 	extend: focusRing,
-	base: "w-full h-full flex items-center justify-center rounded-full forced-color-adjust-none text-zinc-900 dark:text-zinc-200",
+	base: 'w-full h-full flex items-center justify-center rounded-full forced-color-adjust-none text-zinc-900 dark:text-zinc-200',
 	variants: {
 		selectionState: {
-			"none": "group-hover:bg-gray-100 dark:group-hover:bg-zinc-700 group-pressed:bg-gray-200 dark:group-pressed:bg-zinc-600",
-			"middle": [
-				"group-hover:bg-blue-200 dark:group-hover:bg-blue-900 forced-colors:group-hover:bg-[Highlight]",
-				"group-invalid:group-hover:bg-red-200 dark:group-invalid:group-hover:bg-red-900 forced-colors:group-invalid:group-hover:bg-[Mark]",
-				"group-pressed:bg-blue-300 dark:group-pressed:bg-blue-800 forced-colors:group-pressed:bg-[Highlight] forced-colors:text-[HighlightText]",
-				"group-invalid:group-pressed:bg-red-300 dark:group-invalid:group-pressed:bg-red-800 forced-colors:group-invalid:group-pressed:bg-[Mark]",
+			'none': 'group-hover:bg-gray-100 dark:group-hover:bg-zinc-700 group-pressed:bg-gray-200 dark:group-pressed:bg-zinc-600',
+			'middle': [
+				'group-hover:bg-blue-200 dark:group-hover:bg-blue-900 forced-colors:group-hover:bg-[Highlight]',
+				'group-invalid:group-hover:bg-red-200 dark:group-invalid:group-hover:bg-red-900 forced-colors:group-invalid:group-hover:bg-[Mark]',
+				'group-pressed:bg-blue-300 dark:group-pressed:bg-blue-800 forced-colors:group-pressed:bg-[Highlight] forced-colors:text-[HighlightText]',
+				'group-invalid:group-pressed:bg-red-300 dark:group-invalid:group-pressed:bg-red-800 forced-colors:group-invalid:group-pressed:bg-[Mark]',
 			],
-			"cap": "bg-blue-600 group-invalid:bg-red-600 forced-colors:bg-[Highlight] forced-colors:group-invalid:bg-[Mark] text-white forced-colors:text-[HighlightText]"
+			'cap': 'bg-blue-600 group-invalid:bg-red-600 forced-colors:bg-[Highlight] forced-colors:group-invalid:bg-[Mark] text-white forced-colors:text-[HighlightText]'
 		},
 		isDisabled: {
-			true: "text-gray-300 dark:text-zinc-600 forced-colors:text-[GrayText]"
+			true: 'text-gray-300 dark:text-zinc-600 forced-colors:text-[GrayText]'
 		}
 	}
 });
@@ -48,7 +48,7 @@ export function RangeCalendar<T extends DateValue>(
 						{({ formattedDate, isSelected, isSelectionStart, isSelectionEnd, isFocusVisible, isDisabled }) =>
 							<span
 								className={cell({
-									selectionState: isSelected && (isSelectionStart || isSelectionEnd) ? "cap" : isSelected ? "middle" : "none",
+									selectionState: isSelected && (isSelectionStart || isSelectionEnd) ? 'cap' : isSelected ? 'middle' : 'none',
 									isDisabled,
 									isFocusVisible
 								})}>

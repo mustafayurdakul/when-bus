@@ -5,10 +5,10 @@ import { DialogProps, Heading } from "react-aria-components";
 import { Button } from "./Button";
 import { Dialog } from "./Dialog";
 
-interface AlertDialogProps extends Omit<DialogProps, "children"> {
+interface AlertDialogProps extends Omit<DialogProps, 'children'> {
 	title: string,
 	children: ReactNode,
-	variant?: "info" | "destructive",
+	variant?: 'info' | 'destructive',
 	actionLabel: string,
 	cancelLabel?: string,
 	onAction?: () => void
@@ -32,8 +32,8 @@ export function AlertDialog({
 						className="text-xl font-semibold leading-6 my-0">
 						{title}
 					</Heading>
-					<div className={`w-6 h-6 absolute right-6 top-6 stroke-2 ${variant === "destructive" ? "text-red-500" : "text-blue-500"}`}>
-						{variant === "destructive" ? <AlertCircleIcon aria-hidden /> : <InfoIcon aria-hidden />}
+					<div className={`w-6 h-6 absolute right-6 top-6 stroke-2 ${variant === 'destructive' ? 'text-red-500' : 'text-blue-500'}`}>
+						{variant === 'destructive' ? <AlertCircleIcon aria-hidden /> : <InfoIcon aria-hidden />}
 					</div>
 					<p className="mt-3 text-slate-500 dark:text-zinc-400">
 						{children}
@@ -42,10 +42,10 @@ export function AlertDialog({
 						<Button
 							variant="secondary"
 							onPress={close}>
-							{cancelLabel || "Cancel"}
+							{cancelLabel || 'Cancel'}
 						</Button>
 						<Button
-							variant={variant === "destructive" ? "destructive" : "primary"}
+							variant={variant === 'destructive' ? 'destructive' : 'primary'}
 							autoFocus
 							onPress={chain(onAction, close)}>
 							{actionLabel}

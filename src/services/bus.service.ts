@@ -1,9 +1,5 @@
 import axios from "axios";
-
-import BusInfo from "../types/BusInfo";
-import BusInfoDetail from "../types/BusInfoDetail";
-import BusStationInfo from "../types/BusStationInfo";
-import ClosestBusStationsResponse from "../types/responses/ClosestBusStationsResponse";
+import BusInfo from "../types/BusInfo"; import BusInfoDetail from "../types/BusInfoDetail"; import BusStationInfo from "../types/BusStationInfo"; import ClosestBusStationsResponse from "../types/responses/ClosestBusStationsResponse";
 
 const url = "https://www.e-komobil.com";
 const detailUrl = "https://www.kocaeli.bel.tr/tr/main/hatlar";

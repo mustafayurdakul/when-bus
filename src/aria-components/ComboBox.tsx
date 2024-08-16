@@ -1,18 +1,19 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from 'lucide-react';
+
 import {
 	ComboBox as AriaComboBox,
 	ComboBoxProps as AriaComboBoxProps,
 	ListBox,
 	ListBoxItemProps,
 	ValidationResult
-} from "react-aria-components";
-import { Button } from "./Button";
-import { Description, FieldError, FieldGroup, Input, Label } from "./Field";
-import { DropdownItem, DropdownSection, DropdownSectionProps } from "./ListBox";
-import { Popover } from "./Popover";
-import { composeTailwindRenderProps } from "./utils";
+} from 'react-aria-components';
+import { Button } from './Button';
+import { Description, FieldError, FieldGroup, Input, Label } from './Field';
+import { DropdownItem, DropdownSection, DropdownSectionProps } from './ListBox';
+import { Popover } from './Popover';
+import { composeTailwindRenderProps } from './utils';
 
-export interface ComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>, "children"> {
+export interface ComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<T>, 'children'> {
 	label?: string;
 	description?: string | null;
 	errorMessage?: string | ((validation: ValidationResult) => string);
@@ -23,7 +24,7 @@ export function ComboBox<T extends object>(
 	{ label, description, errorMessage, children, items, ...props }: ComboBoxProps<T>
 ) {
 	return (
-		<AriaComboBox {...props} className={composeTailwindRenderProps(props.className, "group flex flex-col gap-1")}>
+		<AriaComboBox {...props} className={composeTailwindRenderProps(props.className, 'group flex flex-col gap-1')}>
 			<Label>{label}</Label>
 			<FieldGroup>
 				<Input />

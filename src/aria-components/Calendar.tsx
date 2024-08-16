@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 import {
 	Calendar as AriaCalendar,
 	CalendarGridHeader as AriaCalendarGridHeader,
@@ -11,26 +12,26 @@ import {
 	Heading,
 	Text,
 	useLocale
-} from "react-aria-components";
-import { tv } from "tailwind-variants";
-import { Button } from "./Button";
-import { focusRing } from "./utils";
+} from 'react-aria-components';
+import { tv } from 'tailwind-variants';
+import { Button } from './Button';
+import { focusRing } from './utils';
 
 const cellStyles = tv({
 	extend: focusRing,
-	base: "w-9 h-9 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
+	base: 'w-9 h-9 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none',
 	variants: {
 		isSelected: {
-			false: "text-zinc-900 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-700 pressed:bg-gray-200 dark:pressed:bg-zinc-600",
-			true: "bg-blue-600 invalid:bg-red-600 text-white forced-colors:bg-[Highlight] forced-colors:invalid:bg-[Mark] forced-colors:text-[HighlightText]"
+			false: 'text-zinc-900 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-700 pressed:bg-gray-200 dark:pressed:bg-zinc-600',
+			true: 'bg-blue-600 invalid:bg-red-600 text-white forced-colors:bg-[Highlight] forced-colors:invalid:bg-[Mark] forced-colors:text-[HighlightText]'
 		},
 		isDisabled: {
-			true: "text-gray-300 dark:text-zinc-600 forced-colors:text-[GrayText]"
+			true: 'text-gray-300 dark:text-zinc-600 forced-colors:text-[GrayText]'
 		}
 	}
 });
 
-export interface CalendarProps<T extends DateValue> extends Omit<AriaCalendarProps<T>, "visibleDuration"> {
+export interface CalendarProps<T extends DateValue> extends Omit<AriaCalendarProps<T>, 'visibleDuration'> {
 	errorMessage?: string;
 }
 
@@ -52,16 +53,16 @@ export function Calendar<T extends DateValue>(
 }
 
 export function CalendarHeader() {
-	const { direction } = useLocale();
+	let { direction } = useLocale();
 
 	return (
 		<header className="flex items-center gap-1 pb-4 px-1 w-full">
 			<Button variant="icon" slot="previous">
-				{direction === "rtl" ? <ChevronRight aria-hidden /> : <ChevronLeft aria-hidden />}
+				{direction === 'rtl' ? <ChevronRight aria-hidden /> : <ChevronLeft aria-hidden />}
 			</Button>
 			<Heading className="flex-1 font-semibold text-xl text-center mx-2 text-zinc-900 dark:text-zinc-200" />
 			<Button variant="icon" slot="next">
-				{direction === "rtl" ? <ChevronLeft aria-hidden /> : <ChevronRight aria-hidden />}
+				{direction === 'rtl' ? <ChevronLeft aria-hidden /> : <ChevronRight aria-hidden />}
 			</Button>
 		</header>
 	);
@@ -76,5 +77,5 @@ export function CalendarGridHeader() {
 				</CalendarHeaderCell>
 			)}
 		</AriaCalendarGridHeader>
-	);
+	)
 }
