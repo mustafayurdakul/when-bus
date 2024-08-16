@@ -1,6 +1,15 @@
 import { Key, useEffect, useState } from "react";
-import BusInfo from "./types/BusInfo"; import BusStationInfo from "./types/BusStationInfo"; import busService from "./services/bus.service";
-import { Button } from "./aria-components/Button"; import { Switch } from "./aria-components/Switch"; import { Select, SelectItem } from "./aria-components/Select"; import { SearchField } from "./aria-components/SearchField"; import { GridList, GridListItem } from "./aria-components/GridList"; import { Label } from "./aria-components/Field";
+
+import { Button } from "./aria-components/Button";
+import { Switch } from "./aria-components/Switch";
+import { Select, SelectItem } from "./aria-components/Select";
+import { SearchField } from "./aria-components/SearchField";
+import { GridList, GridListItem } from "./aria-components/GridList";
+import { Label } from "./aria-components/Field";
+
+import BusInfo from "./types/BusInfo";
+import BusStationInfo from "./types/BusStationInfo";
+import BusService from "./services/bus.service";
 
 function App() {
 
@@ -26,7 +35,7 @@ function App() {
 		setAllBusses([]);
 		setUpcomingBusses([]);
 
-		busService.getUpcomingBuses(Number(busStationInfo.id)).then((response) => {
+		BusService.getUpcomingBuses(Number(busStationInfo.id)).then((response) => {
 			if (response) {
 				setUpcomingBusses(response.upcomingBusses);
 				setAllBusses(response.allBusses);
@@ -42,6 +51,12 @@ function App() {
 
 	};
 
+	const getBusStationDetail = async (stationId: string) => {
+		await BusService.getBusStationDetail(stationId).then((response) => {
+			console.log(response);
+		});
+	}
+
 	// If toggleLocation true call getClosestBusStations
 
 	useEffect(() => {
@@ -52,7 +67,7 @@ function App() {
 			if (toggleLocation && navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition((position) => {
 					setClosestBusStations([]);
-					busService.getClosestBusStations(position.coords.latitude, position.coords.longitude).then((closestBusStations: BusStationInfo[]) => {
+					BusService.getClosestBusStations(position.coords.latitude, position.coords.longitude).then((closestBusStations: BusStationInfo[]) => {
 						if (closestBusStations.length > 0) {
 							setClosestBusStations(closestBusStations);
 							setBusStationInfo(closestBusStations[0]);
@@ -128,7 +143,7 @@ function App() {
 						<GridList selectionMode="none">
 							{upcomingBusses.map((bus, index) => (
 								<GridListItem key={index}>
-									<div className="flex justify-between items-center w-full">
+									<div className="flex justify-between items-center w-full" onClick={() => getBusStationDetail(bus.number)}>
 										<div className="max-w-[75%] space-y-1">
 											<div className="text-2xl">
 												{bus.number}
