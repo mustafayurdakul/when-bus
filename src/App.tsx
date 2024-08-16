@@ -174,8 +174,7 @@ function App() {
 												</div>
 											</div>
 											{
-												bus.number + index === selectedBusStationForDetail
-												&&
+												bus.number + index === selectedBusStationForDetail && busStationDetail &&
 												<div key={index} className="flex flex-col space-y-1">
 													<hr className="border-zinc-200 dark:border-zinc-700 my-5" />
 													<div className="flex flex-col space-y-3">
@@ -205,7 +204,6 @@ function App() {
 												</div>
 											}
 										</div>
-
 									</div>
 								))
 							}
@@ -217,39 +215,50 @@ function App() {
 					allBusses.length > 0 &&
 					<>
 						<Label className="text-xl">Tüm Otobüsler</Label>
-						<GridList selectionMode="none" aria-label="Tüm Otobüsler">
+						<div className="flex flex-col space-y-3">
 							{
 								allBusses.map((bus, index) => (
-									<GridListItem key={index} textValue="Otobüs">
-										<div className=""
+									<div key={index} className="flex flex-col space-y-1">
+										<div className="flex flex-col p-4 rounded-md border border-zinc-200 dark:border-zinc-700 cursor-pointer"
 											onClick={() => getBusStationDetail(bus.number, index)}>
-											<div className="max-w-[75%] space-y-1">
+											<div className="flex justify-between items-center">
+												<div className="max-w-[75%] space-y-1">
+													<div className="text-2xl">
+														{bus.number}
+													</div>
+													<div className="text-xs">
+														{bus.description}
+													</div>
+													<div className="text-xs">
+														{bus.stopsLeft} Durak
+													</div>
+												</div>
 												<div className="text-2xl">
-													{bus.number}
-												</div>
-												<div className="text-xs">
-													{bus.description}
-												</div>
-												<div className="text-xs">
-													{bus.stopsLeft} Durak
+													{bus.remainingTime} dk
 												</div>
 											</div>
-										</div>
-										{/* {
-											bus.number + index === selectedBusStationForDetail
-											&& busStationDetail?.map((busStation, index) => (
-												<div className="bg-zinc-100 dark:bg-zinc-800 p-2 rounded-md flex flex-col space-y-1" key={index}>
-													<div className="flex flex-col space-y-1">
-														<div>
-															{busStation.name}
+											{
+												bus.number + index === selectedBusStationForDetail && busStationDetail &&
+												<div key={index} className="flex flex-col space-y-1">
+													<hr className="border-zinc-200 dark:border-zinc-700 my-5" />
+													<div className="flex flex-col space-y-3">
+														<div className="flex justify-between items-center">
+															<div className="text-xl">
+																{busStationDetail?.[direction ? 0 : 1].name}
+															</div>
+															<Switch isSelected={direction} onChange={(value) => setDirection(value)}>
+																Yön
+															</Switch>
 														</div>
 														{
-															busStation.stations.map((station, index) => (
-																<div key={index} className="flex justify-between items-center">
-																	<div>
+															busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
+																<div key={index} className="flex justify-between items-center text-xs">
+																	<div onClick={() =>
+																		window.open(`${station.location}`, "_blank")
+																	}>
 																		{station.name}
 																	</div>
-																	<div>
+																	<div className="font-mono">
 																		{station.code}
 																	</div>
 																</div>
@@ -257,12 +266,12 @@ function App() {
 														}
 													</div>
 												</div>
-											))
-										} */}
-									</GridListItem>
+											}
+										</div>
+									</div>
 								))
 							}
-						</GridList>
+						</div>
 					</>
 				}
 			</div>
