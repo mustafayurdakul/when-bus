@@ -143,54 +143,70 @@ class BusService {
 		return { upcomingBusses, allBusses };
 	}
 
-	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
-
-		const uri = encodeURIComponent(`${detailUrl}/${station}`);
-
-		const response = await axios({
-			method: "get",
-			url: `https://corsproxy.io/?${uri}`,
-		})
-
-		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
-
-		return busInfoDetail;
-	}
-
-	private parseBusInfoDetail = (container: Element): BusInfoDetail => {
-		const name = container.querySelector("h3")?.textContent?.trim() || "";
-		const stations = Array.from(container.querySelectorAll("tbody tr")).map((row) => {
-			const columns = row.querySelectorAll("th");
-			const code = columns[1]?.textContent?.trim() || "";
-			const stationName = columns[2]?.textContent?.trim() || "";
-			const location = columns[2]?.querySelector("a")?.getAttribute("href") || "";
-
-			return { code, name: stationName, location };
-		});
-
-		return { name, stations };
-	};
-
 	private parseBusStationDetailResponse(data: string): BusInfoDetail[] {
 		const parser = new DOMParser();
 		const doc = parser.parseFromString(data, "text/html");
 
-		const stationsElement = doc.getElementById("duraklar");
-		const stations = stationsElement?.querySelector(".tramvay-station");
+		const stations = doc.querySelectorAll(".col-md-6"); // Select both columns containing station information
 
-		if (stations) {
-			const station1 = stations.querySelector(".col-md-6:nth-child(1)");
-			const station2 = stations.querySelector(".col-md-6:nth-child(2)");
+		const unwantedIndex = [0, 1]; // Unwanted indexes to be removed from the list
 
-			if (station1 && station2) {
-				const stationInfo1 = this.parseBusInfoDetail(station1);
-				const stationInfo2 = this.parseBusInfoDetail(station2);
+		if (stations.length > 0) {
+			const busInfoDetails: BusInfoDetail[] = [];
 
-				return [stationInfo1, stationInfo2];
-			}
+			stations.forEach((station, index) => {
+
+				if (unwantedIndex.includes(index)) {
+					return;
+				}
+
+				const stationNameElement = station.querySelector("h3");
+				const tableRows = station.querySelectorAll("tbody tr");
+
+				if (stationNameElement && tableRows.length > 0) {
+					const name = stationNameElement.textContent?.trim() || '';
+					const stations: { code: string, name: string, location: string }[] = [];
+
+					tableRows.forEach(row => {
+						const columns = row.querySelectorAll("td");
+						if (columns.length >= 3) { // Assuming each row should have at least 3 columns
+							const code = columns[1].textContent?.trim() || '';
+							const name = columns[2].textContent?.trim() || '';
+							const locationElement = columns[2].querySelector('a');
+							const location = locationElement ? locationElement.getAttribute('href') || '' : '';
+
+							stations.push({
+								code,
+								name,
+								location,
+							});
+						}
+					});
+
+					busInfoDetails.push({
+						name,
+						stations,
+					});
+				}
+			});
+
+			return busInfoDetails;
 		}
 
 		return [];
+	}
+
+	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
+		const uri = encodeURIComponent(`${detailUrl}/${station}`);
+
+		const response = await axios({
+			method: "get",
+			url: `https://corsproxy.io/?${uri}/`,
+		});
+
+		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
+
+		return busInfoDetail;
 	}
 
 }

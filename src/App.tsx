@@ -10,6 +10,7 @@ import { Label } from "./aria-components/Field";
 import BusInfo from "./types/BusInfo";
 import BusStationInfo from "./types/BusStationInfo";
 import BusService from "./services/bus.service";
+import BusInfoDetail from "./types/BusInfoDetail";
 
 function App() {
 
@@ -18,6 +19,12 @@ function App() {
 	const [allBusses, setAllBusses] = useState<BusInfo[]>([]);
 
 	const [busStationInfo, setBusStationInfo] = useState<BusStationInfo>({ id: "30374" });
+
+	const [busStationDetail, setBusStationDetail] = useState<BusInfoDetail[] | null>(null);
+
+	const [direction, setDirection] = useState(false);
+
+	const [selectedBusStationForDetail, setSelectedBusStationForDetail] = useState("");
 
 	const [closestBusStations, setClosestBusStations] = useState<BusStationInfo[]>([]);
 
@@ -51,9 +58,12 @@ function App() {
 
 	};
 
-	const getBusStationDetail = async (stationId: string) => {
+	const getBusStationDetail = async (stationId: string, index: number) => {
+
+		selectedBusStationForDetail === stationId + index ? setSelectedBusStationForDetail("") : setSelectedBusStationForDetail(stationId + index);
+
 		await BusService.getBusStationDetail(stationId).then((response) => {
-			console.log(response);
+			setBusStationDetail(response);
 		});
 	}
 
@@ -100,7 +110,7 @@ function App() {
 	}, [toggleLocation]);
 
 	return (
-		<div className="container mx-auto max-w-md py-5 px-5">
+		<div className="container mx-auto max-w-md py-5 px-5 text-zinc-900 dark:text-zinc-100">
 			<div className="flex flex-col space-y-5">
 
 				<div className="flex justify-between items-end">
@@ -137,54 +147,121 @@ function App() {
 
 				<Button onPress={getUpcomingBuses} isDisabled={isLoading}>Otobüsleri Getir</Button>
 
-				{upcomingBusses.length > 0 &&
+				{
+					upcomingBusses.length > 0 &&
 					<>
 						<Label className="text-xl">Yaklaşan Otobüsler</Label>
-						<GridList selectionMode="none">
-							{upcomingBusses.map((bus, index) => (
-								<GridListItem key={index}>
-									<div className="flex justify-between items-center w-full" onClick={() => getBusStationDetail(bus.number)}>
-										<div className="max-w-[75%] space-y-1">
-											<div className="text-2xl">
-												{bus.number}
+						<div className="flex flex-col space-y-3">
+							{
+								upcomingBusses.map((bus, index) => (
+									<div key={index} className="flex flex-col space-y-1">
+										<div className="flex flex-col p-4 rounded-md border border-zinc-200 dark:border-zinc-700 cursor-pointer"
+											onClick={() => getBusStationDetail(bus.number, index)}>
+											<div className="flex justify-between items-center">
+												<div className="max-w-[75%] space-y-1">
+													<div className="text-2xl">
+														{bus.number}
+													</div>
+													<div className="text-xs">
+														{bus.description}
+													</div>
+													<div className="text-xs">
+														{bus.stopsLeft} Durak
+													</div>
+												</div>
+												<div className="text-2xl">
+													{bus.remainingTime} dk
+												</div>
 											</div>
-											<div className="text-xs">
-												{bus.description}
-											</div>
-											<div className="text-xs">
-												{bus.stopsLeft} Durak
-											</div>
+											{
+												bus.number + index === selectedBusStationForDetail
+												&&
+												<div key={index} className="flex flex-col space-y-1">
+													<hr className="border-zinc-200 dark:border-zinc-700 my-5" />
+													<div className="flex flex-col space-y-3">
+														<div className="flex justify-between items-center">
+															<div className="text-xl">
+																{busStationDetail?.[direction ? 0 : 1].name}
+															</div>
+															<Switch isSelected={direction} onChange={(value) => setDirection(value)}>
+																Yön
+															</Switch>
+														</div>
+														{
+															busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
+																<div key={index} className="flex justify-between items-center text-xs">
+																	<div onClick={() =>
+																		window.open(`${station.location}`, "_blank")
+																	}>
+																		{station.name}
+																	</div>
+																	<div className="font-mono">
+																		{station.code}
+																	</div>
+																</div>
+															))
+														}
+													</div>
+												</div>
+											}
 										</div>
-										<div className="text-3xl">
-											{bus.remainingTime} dk
-										</div>
+
 									</div>
-								</GridListItem>
-							))}
-						</GridList>
+								))
+							}
+						</div>
 					</>
 				}
 
-				{allBusses.length > 0 &&
+				{
+					allBusses.length > 0 &&
 					<>
 						<Label className="text-xl">Tüm Otobüsler</Label>
-						<GridList selectionMode="none">
-							{allBusses.map((bus, index) => (
-								<GridListItem key={index} >
-									<div className="flex justify-between items-center w-full">
-										<div>
-											<div className="text-2xl">
-												{bus.number}
-											</div>
-											<div className="text-xs">
-												{bus.description}
-
+						<GridList selectionMode="none" aria-label="Tüm Otobüsler">
+							{
+								allBusses.map((bus, index) => (
+									<GridListItem key={index} textValue="Otobüs">
+										<div className=""
+											onClick={() => getBusStationDetail(bus.number, index)}>
+											<div className="max-w-[75%] space-y-1">
+												<div className="text-2xl">
+													{bus.number}
+												</div>
+												<div className="text-xs">
+													{bus.description}
+												</div>
+												<div className="text-xs">
+													{bus.stopsLeft} Durak
+												</div>
 											</div>
 										</div>
-									</div>
-
-								</GridListItem>
-							))}
+										{/* {
+											bus.number + index === selectedBusStationForDetail
+											&& busStationDetail?.map((busStation, index) => (
+												<div className="bg-zinc-100 dark:bg-zinc-800 p-2 rounded-md flex flex-col space-y-1" key={index}>
+													<div className="flex flex-col space-y-1">
+														<div>
+															{busStation.name}
+														</div>
+														{
+															busStation.stations.map((station, index) => (
+																<div key={index} className="flex justify-between items-center">
+																	<div>
+																		{station.name}
+																	</div>
+																	<div>
+																		{station.code}
+																	</div>
+																</div>
+															))
+														}
+													</div>
+												</div>
+											))
+										} */}
+									</GridListItem>
+								))
+							}
 						</GridList>
 					</>
 				}
