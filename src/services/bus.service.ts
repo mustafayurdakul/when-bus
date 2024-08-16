@@ -149,7 +149,7 @@ class BusService {
 
 		const response = await axios({
 			method: "get",
-			url: `https://corsproxy.io/?' + ${uri}`
+			url: `https://corsproxy.io/?${uri}`,
 		})
 
 		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
