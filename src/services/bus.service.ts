@@ -197,14 +197,14 @@ class BusService {
 	}
 
 	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
-		const uri = `${detailUrl}/${station}`;
+		const uri = encodeURIComponent(`${detailUrl}/${station}`);
 
 		const response = await axios({
 			method: "get",
-			url: `https://thingproxy.freeboard.io/fetch/${uri}/`,
+			url: `https://api.allorigins.win/get?url=${uri}/`,
 		});
 
-		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
+		const busInfoDetail = this.parseBusStationDetailResponse(response.data.contents);
 
 		return busInfoDetail;
 	}
