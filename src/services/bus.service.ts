@@ -6,7 +6,6 @@ import BusStationInfo from "../types/BusStationInfo";
 import ClosestBusStationsResponse from "../types/responses/ClosestBusStationsResponse";
 
 const url = "https://www.e-komobil.com";
-const detailUrl = "https://www.kocaeli.bel.tr/hatlar";
 
 class BusService {
 
@@ -164,16 +163,16 @@ class BusService {
 				const tableRows = station.querySelectorAll("tbody tr");
 
 				if (stationNameElement && tableRows.length > 0) {
-					const name = stationNameElement.textContent?.trim() || '';
+					const name = stationNameElement.textContent?.trim() || "";
 					const stations: { code: string, name: string, location: string }[] = [];
 
 					tableRows.forEach(row => {
 						const columns = row.querySelectorAll("td");
 						if (columns.length >= 3) { // Assuming each row should have at least 3 columns
-							const code = columns[1].textContent?.trim() || '';
-							const name = columns[2].textContent?.trim() || '';
-							const locationElement = columns[2].querySelector('a');
-							const location = locationElement ? locationElement.getAttribute('href') || '' : '';
+							const code = columns[1].textContent?.trim() || "";
+							const name = columns[2].textContent?.trim() || "";
+							const locationElement = columns[2].querySelector("a");
+							const location = locationElement ? locationElement.getAttribute("href") || "" : "";
 
 							stations.push({
 								code,
@@ -197,14 +196,14 @@ class BusService {
 	}
 
 	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
-		const uri = encodeURIComponent(`${detailUrl}/${station}`);
 
-		const response = await axios({
-			method: "get",
-			url: `https://api.allorigins.win/get?url=${uri}/`,
-		});
+		const response = await axios.get(
+			`/when-bus/proxy/hatlar/${station}/`,
+		);
 
-		const busInfoDetail = this.parseBusStationDetailResponse(response.data.contents);
+		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
+
+		console.log(busInfoDetail);
 
 		return busInfoDetail;
 	}

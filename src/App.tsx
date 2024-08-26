@@ -64,7 +64,7 @@ function App() {
 		await BusService.getBusStationDetail(stationId).then((response) => {
 			setBusStationDetail(response);
 		});
-	}
+	};
 
 	// If toggleLocation true call getClosestBusStations
 
@@ -178,8 +178,8 @@ function App() {
 													<hr className="border-zinc-200 dark:border-zinc-700 my-5" />
 													<div className="flex flex-col space-y-3">
 														<div className="flex justify-between items-center">
-															<div className="text-xl">
-																{busStationDetail?.[direction ? 0 : 1].name}
+															<div className="text-lg">
+																{busStationDetail?.[direction ? 0 : 1].stations[0].name}
 															</div>
 															<Switch isSelected={direction} onChange={(value) => setDirection(value)}>
 																Yön
@@ -232,9 +232,9 @@ function App() {
 														{bus.stopsLeft} Durak
 													</div>
 												</div>
-												<div className="text-2xl">
+												{/* <div className="text-2xl">
 													{bus.remainingTime} dk
-												</div>
+												</div> */}
 											</div>
 											{
 												bus.number + index === selectedBusStationForDetail && busStationDetail &&
@@ -242,7 +242,7 @@ function App() {
 													<hr className="border-zinc-200 dark:border-zinc-700 my-5" />
 													<div className="flex flex-col space-y-3">
 														<div className="flex justify-between items-center">
-															<div className="text-xl">
+															<div className="text-lg">
 																{busStationDetail?.[direction ? 0 : 1].name}
 															</div>
 															<Switch isSelected={direction} onChange={(value) => setDirection(value)}>
