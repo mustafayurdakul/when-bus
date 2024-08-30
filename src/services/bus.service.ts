@@ -6,6 +6,7 @@ import BusStationInfo from "../types/BusStationInfo";
 import ClosestBusStationsResponse from "../types/responses/ClosestBusStationsResponse";
 
 const url = "https://www.e-komobil.com";
+const detailUrl = "https://www.kocaeli.bel.tr";
 
 class BusService {
 
@@ -198,7 +199,7 @@ class BusService {
 	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
 
 		const response = await axios.get(
-			`/when-bus/proxy/hatlar/${station}/`,
+			`https://yurdakul-dev-proxy.onrender.com/?url=${detailUrl}/hatlar/${station}/`,
 		);
 
 		const busInfoDetail = this.parseBusStationDetailResponse(response.data);

@@ -59,6 +59,8 @@ function App() {
 
 	const getBusStationDetail = async (stationId: string, index: number) => {
 
+		setBusStationDetail(null);
+
 		selectedBusStationForDetail === stationId + index ? setSelectedBusStationForDetail("") : setSelectedBusStationForDetail(stationId + index);
 
 		await BusService.getBusStationDetail(stationId).then((response) => {
