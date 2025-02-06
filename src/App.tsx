@@ -127,7 +127,7 @@ function App() {
 					<div className="flex flex-col space-y-2">
 						<label>İstasyon Kodu</label>
 						<select
-							className="px-3 py-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg"
+							className="px-3 py-3 bg-zinc-200 dark:bg-zinc-800 rounded-lg"
 							disabled={isLoading}
 							value={closestBusStations.find((busStation) => busStation.id === busStationInfo.id)?.id || ""}
 							onChange={(e) => {
