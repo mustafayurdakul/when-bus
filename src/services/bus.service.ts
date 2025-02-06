@@ -71,7 +71,12 @@ class BusService {
 	private parseBusStationInfoResponse(data: string) {
 
 		const parser = new DOMParser();
-		const doc = parser.parseFromString(data, "text/html");
+
+		// Fix unclosed tags
+		const fixedData = data
+			.replace(/<link rel="dns-prefetch" href="\/\/graph\.facebook\.com">/g, '<link rel="dns-prefetch" href="//graph.facebook.com" />')
+			.replace(/<link rel="dns-prefetch" href="\/\/linkedin\.com">/g, '<link rel="dns-prefetch" href="//linkedin.com" />');
+		const doc = parser.parseFromString(fixedData, "text/html");
 
 		const yaklasanDiv = doc.getElementById("yaklasan");
 		const gecenDiv = doc.getElementById("gecen");
@@ -199,12 +204,15 @@ class BusService {
 	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
 
 		const response = await axios.get(
-			`https://yurdakul-dev-proxy.onrender.com/?url=${detailUrl}/hatlar/${station}/`,
+			`http://net-wizard-middleware.yurdakul.keenetic.link/?url=${detailUrl}/hatlar/${station}/`,
+			{
+				headers: {
+					"x-api-key": "b689b8d2-be24-42b4-b368-20bf8805df24"
+				}
+			}
 		);
 
 		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
-
-		console.log(busInfoDetail);
 
 		return busInfoDetail;
 	}

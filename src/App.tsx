@@ -110,6 +110,10 @@ function App() {
 		}
 	}, [toggleLocation]);
 
+	useEffect(() => {
+		getUpcomingBuses();
+	}, [busStationInfo]);
+
 	return (
 		<div className="container mx-auto max-w-md py-5 px-5 text-zinc-900 dark:text-zinc-100">
 			<div className="flex flex-col space-y-5">
@@ -189,13 +193,15 @@ function App() {
 														</div>
 														{
 															busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
-																<div key={index} className="flex justify-between items-center text-xs">
-																	<div onClick={() =>
+																<div key={index} className={`flex justify-between items-center rounded text-xs ${index % 2 === 0 ? 'bg-zinc-100 dark:bg-zinc-800' : ''}`}>
+																	<div className="text-xs p-2" onClick={() =>
 																		window.open(`${station.location}`, "_blank")
 																	}>
 																		{station.name}
 																	</div>
-																	<div className="font-mono">
+																	<div className="font-mono p-2" onClick={() =>
+																		setBusStationInfo({ id: station.code })
+																	}>
 																		{station.code}
 																	</div>
 																</div>
@@ -253,13 +259,13 @@ function App() {
 														</div>
 														{
 															busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
-																<div key={index} className="flex justify-between items-center text-xs">
-																	<div onClick={() =>
+																<div key={index} className={`flex justify-between items-center rounded text-xs ${index % 2 === 0 ? 'bg-zinc-100 dark:bg-zinc-800' : ''}`}>
+																	<div className="font-small p-2" onClick={() =>
 																		window.open(`${station.location}`, "_blank")
 																	}>
 																		{station.name}
 																	</div>
-																	<div className="font-mono">
+																	<div className="font-mono p-2">
 																		{station.code}
 																	</div>
 																</div>
