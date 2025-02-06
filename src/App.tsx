@@ -53,7 +53,7 @@ function App() {
 			// notify("Bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
 		}
 		).finally(() => {
-			setLastUpdateTime(new Date().toTimeString().split("")[0]);
+			setLastUpdateTime(new Date().toLocaleTimeString());
 			setIsLoading(false);
 		});
 
@@ -164,7 +164,7 @@ function App() {
 
 			<div className="flex justify-between items-center">
 				{
-					!isLoading && lastUpdateTime && <p className="text-xs">Son Güncelleme Zamanı: {lastUpdateTime} dk</p>
+					!isLoading && lastUpdateTime && <p className="text-xs">Son Güncelleme Zamanı: {lastUpdateTime}</p>
 				}
 				{
 					isLoading && <p className="text-sm">Yükleniyor...</p>
