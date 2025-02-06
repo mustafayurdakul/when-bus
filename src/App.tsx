@@ -131,7 +131,7 @@ function App() {
 					<div className="flex flex-col">
 						<label>En Yakın Otobüs Durakları</label>
 						<select
-							className="px-2 py-1 appearance-none bg-zinc-200 dark:bg-zinc-800 rounded-lg"
+							className="px-3 py-2 appearance-none bg-zinc-200 dark:bg-zinc-800 rounded-lg"
 							disabled={isLoading}
 							value={closestBusStations.find((busStation) => busStation.id === busStationInfo.id)?.id || ""}
 							onChange={(e) => {
@@ -150,28 +150,31 @@ function App() {
 						<label>İstasyon Kodu</label>
 						<input
 							type="text"
-							className="px-2 py-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg"
+							className="px-3 py-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg"
 							value={busStationInfo.id}
 							onChange={(e) => setBusStationInfo({ id: e.target.value })}
 							placeholder="İstasyon kodunu girin (örn. 30374)."
 							disabled={isLoading}
 						/>
+						<span className="text-xs text-zinc-500 dark:text-zinc-400">zinc
+							Öğrenmek istediğiniz otobüs durağının kodunu girin. (Örn. 30374)
+						</span>
 					</div>
 			}
 
 			<div className="flex justify-between items-center">
 				{
-					!isLoading && lastUpdateTime && <p className="text-xs">Son Güncelleme Zamanı: {lastUpdateTime}</p>
+					!isLoading && lastUpdateTime && <p className="text-xs">Son Güncelleme Zamanı: {lastUpdateTime} dk</p>
 				}
 				{
 					isLoading && <p className="text-sm">Yükleniyor...</p>
 				}
-				<button onClick={() => setToggleLocation(!toggleLocation)} className="px-2 py-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg">
+				<button onClick={() => setToggleLocation(!toggleLocation)} className="px-3 py-3 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex justify-center items-center">
 					{toggleLocation ? <FontAwesomeIcon icon={faLocationDot} /> : <FontAwesomeIcon icon={faLocationPinLock} />}
 				</button>
 			</div>
 
-			<button className="px-2 py-1 bg-blue-200 dark:bg-blue-800 rounded-lg"
+			<button className="px-3 py-2 bg-blue-200 dark:bg-blue-800 rounded-lg"
 				onClick={getUpcomingBuses} disabled={isLoading}>Otobüsleri Getir</button>
 
 			{
