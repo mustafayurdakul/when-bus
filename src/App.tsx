@@ -156,7 +156,7 @@ function App() {
 							placeholder="İstasyon kodunu girin (örn. 30374)."
 							disabled={isLoading}
 						/>
-						<span className="text-xs text-zinc-500 dark:text-zinc-400">zinc
+						<span className="text-xs text-zinc-500 dark:text-zinc-400">
 							Öğrenmek istediğiniz otobüs durağının kodunu girin. (Örn. 30374)
 						</span>
 					</div>
@@ -226,7 +226,7 @@ function App() {
 																}>
 																	{station.name}
 																</div>
-																<div className="font-mono">
+																<div className="font-mono" onClick={() => setBusStationInfo({ id: station.code })}>
 																	{station.code}
 																</div>
 															</div>
@@ -290,7 +290,7 @@ function App() {
 																}>
 																	{station.name}
 																</div>
-																<div className="font-mono">
+																<div className="font-mono" onClick={() => setBusStationInfo({ id: station.code })}>
 																	{station.code}
 																</div>
 															</div>
