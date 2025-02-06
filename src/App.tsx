@@ -6,7 +6,7 @@ import BusService from "./services/bus.service";
 import BusInfoDetail from "./types/BusInfoDetail";
 
 
-import { faBackwardStep, faForwardStep, faLocationDot, faLocationPin, faLocationPinLock } from "@fortawesome/free-solid-svg-icons";
+import { faBackwardStep, faForwardStep, faLocationDot, faLocationPinLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function App() {
