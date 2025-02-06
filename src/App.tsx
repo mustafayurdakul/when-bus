@@ -287,6 +287,10 @@ function App() {
 															{direction ? <FontAwesomeIcon icon={faBackwardStep} /> : <FontAwesomeIcon icon={faForwardStep} />}
 														</button>
 													</div>
+													<div className="flex justify-between items-center text-xs p-3 rounded-lg">
+														<FontAwesomeIcon icon={faMapLocationDot} />
+														<FontAwesomeIcon icon={faHashtag} />
+													</div>
 													{
 														busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
 															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 === 0 ? 'bg-zinc-200 dark:bg-zinc-700' : ''}`}>
