@@ -204,12 +204,7 @@ class BusService {
 	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
 
 		const response = await axios.get(
-			`http://net-wizard-middleware.yurdakul.keenetic.link/?url=${detailUrl}/hatlar/${station}/`,
-			{
-				headers: {
-					"x-api-key": "b689b8d2-be24-42b4-b368-20bf8805df24"
-				}
-			}
+			`https://net-wizard-middleware.yurdakul.keenetic.link/?url=${detailUrl}/hatlar/${station}/`
 		);
 
 		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
