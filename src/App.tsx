@@ -25,7 +25,7 @@ function App() {
 
 	const [closestBusStations, setClosestBusStations] = useState<BusStationInfo[]>([]);
 
-	const [lastUpdateTime, setLastUpdateTime] = useState("");
+	const [lastUpdateTime, setLastUpdateTime] = useState(new Date().toLocaleTimeString());
 
 	const [isLoading, setIsLoading] = useState(false);
 
