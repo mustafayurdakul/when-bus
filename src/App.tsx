@@ -237,12 +237,12 @@ function App() {
 													{
 														busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
 															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 !== 0 ? 'bg-zinc-300 dark:bg-zinc-700' : ''}`}>
-																<div className="" onClick={() =>
+																<div className="cursor-pointer " onClick={() =>
 																	window.open(`${station.location}`, "_blank")
 																}>
 																	{station.name}
 																</div>
-																<div className="font-mono" onClick={() => setBusStationInfo({ id: station.code })}>
+																<div className="cursor-pointer font-mono" onClick={() => setBusStationInfo({ id: station.code })}>
 																	{station.code}
 																</div>
 															</div>
@@ -314,12 +314,12 @@ function App() {
 													{
 														busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
 															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 !== 0 ? 'bg-zinc-300 dark:bg-zinc-700' : ''}`}>
-																<div className="" onClick={() =>
+																<div className="cursor-pointer " onClick={() =>
 																	window.open(`${station.location}`, "_blank")
 																}>
 																	{station.name}
 																</div>
-																<div className="font-mono" onClick={() => setBusStationInfo({ id: station.code })}>
+																<div className="cursor-pointer font-mono" onClick={() => setBusStationInfo({ id: station.code })}>
 																	{station.code}
 																</div>
 															</div>
