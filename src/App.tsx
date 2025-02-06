@@ -6,7 +6,7 @@ import BusService from "./services/bus.service";
 import BusInfoDetail from "./types/BusInfoDetail";
 
 
-import { faBackwardStep, faForwardStep, faLocationDot, faLocationPinLock } from "@fortawesome/free-solid-svg-icons";
+import { faBackwardStep, faCalculator, faForwardStep, faHashtag, faLocationDot, faLocationPin, faLocationPinLock, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function App() {
@@ -188,9 +188,8 @@ function App() {
 						{
 							upcomingBusses.map((bus, index) => (
 								<div key={index} className="flex flex-col">
-									<div className="p-5 flex flex-col bg-zinc-200 dark:bg-zinc-800 cursor-pointer space-y-3 rounded-lg"
-										onClick={() => getBusStationDetail(bus.number, index)}>
-										<div className="flex justify-between items-center">
+									<div className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded-lg">
+										<div className="flex justify-between items-center p-5 cursor-pointer" onClick={() => getBusStationDetail(bus.number, index)}>
 											<div className="max-w-[75%] flex flex-col space-y-1">
 												<div className="font-bold text-3xl">
 													{bus.number}
@@ -210,8 +209,8 @@ function App() {
 										</div>
 										{
 											bus.number + index === selectedBusStationForDetail && busStationDetail &&
-											<div key={index} className="flex flex-col space-y-2">
-												<hr className="border-zinc-200 dark:border-zinc-700" />
+											<div key={index} className="flex flex-col p-5 pt-0">
+												<hr className="border-zinc-200 dark:border-zinc-700 mb-5" />
 												<div className="flex flex-col space-y-2">
 													<div className="flex justify-between items-center">
 														<div className="font-bold">
@@ -220,6 +219,10 @@ function App() {
 														<button className="px-2 py-1" onClick={() => setDirection(!direction)}>
 															{direction ? <FontAwesomeIcon icon={faBackwardStep} /> : <FontAwesomeIcon icon={faForwardStep} />}
 														</button>
+													</div>
+													<div className="flex justify-between items-center text-xs p-3 rounded-lg">
+														<FontAwesomeIcon icon={faMapLocationDot} />
+														<FontAwesomeIcon icon={faHashtag} />
 													</div>
 													{
 														busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
@@ -254,9 +257,8 @@ function App() {
 						{
 							allBusses.map((bus, index) => (
 								<div key={index} className="flex flex-col">
-									<div className="p-5 flex flex-col bg-zinc-200 dark:bg-zinc-800 cursor-pointer space-y-3 rounded-lg"
-										onClick={() => getBusStationDetail(bus.number, index)}>
-										<div className="flex justify-between items-center">
+									<div className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded-lg">
+										<div className="flex justify-between items-center p-5 cursor-pointer" onClick={() => getBusStationDetail(bus.number, index)}>
 											<div className="max-w-[75%] flex flex-col space-y-1">
 												<div className="font-bold text-3xl">
 													{bus.number}
@@ -274,8 +276,8 @@ function App() {
 										</div>
 										{
 											bus.number + index === selectedBusStationForDetail && busStationDetail &&
-											<div key={index} className="flex flex-col space-y-2">
-												<hr className="border-zinc-200 dark:border-zinc-700" />
+											<div key={index} className="flex flex-col p-5 pt-0">
+												<hr className="border-zinc-200 dark:border-zinc-700 mb-5" />
 												<div className="flex flex-col space-y-2">
 													<div className="flex justify-between items-center">
 														<div className="font-bold">
