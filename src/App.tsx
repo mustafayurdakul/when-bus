@@ -265,20 +265,14 @@ function App() {
 								<div key={index} className="flex flex-col">
 									<div className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded-lg">
 										<div className="flex justify-between items-center p-5 cursor-pointer" onClick={() => getBusStationDetail(bus.number, index)}>
-											<div className="max-w-[75%] flex flex-col space-y-1">
+											<div className="flex flex-col space-y-1">
 												<div className="font-bold text-3xl">
 													{bus.number}
 												</div>
 												<div className="text-xs">
 													{bus.description}
 												</div>
-												{/* <div className="text-xs font-mono">
-													{bus.stopsLeft} Durak
-												</div> */}
 											</div>
-											{/* <div className="font-bold text-3xl">
-												{bus.remainingTime} dk
-											</div> */}
 										</div>
 										{
 											bus.number + index === selectedBusStationForDetail && busStationDetail &&
