@@ -194,7 +194,7 @@ function App() {
 												<div className="font-bold text-3xl">
 													{bus.number}
 												</div>
-												<div className="text-sm">
+												<div className="text-xs">
 													{bus.description}
 												</div>
 											</div>
@@ -213,20 +213,30 @@ function App() {
 												<hr className="border-zinc-200 dark:border-zinc-700 mb-5" />
 												<div className="flex flex-col space-y-2">
 													<div className="flex justify-between items-center">
-														<div className="font-bold">
+														<div className="text-xs font-bold">
 															{busStationDetail?.[direction ? 0 : 1].name}
 														</div>
 														<button className="px-2 py-1" onClick={() => setDirection(!direction)}>
 															{direction ? <FontAwesomeIcon icon={faBackwardStep} /> : <FontAwesomeIcon icon={faForwardStep} />}
 														</button>
 													</div>
-													<div className="flex justify-between items-center text-xs p-3 rounded-lg text-zinc-600 dark:text-zinc-400">
-														<FontAwesomeIcon icon={faMapLocationDot} />
-														<FontAwesomeIcon icon={faHashtag} />
+													<div className="flex justify-between items-center text-xs p-3 rounded-lg text-zinc-600 dark:text-zinc-400 bg-zinc-300 dark:bg-zinc-700">
+														<div className="flex items-center space-x-1">
+															<FontAwesomeIcon icon={faMapLocationDot} />
+															<span>
+																Durak Konumu
+															</span>
+														</div>
+														<div className="flex items-center space-x-1">
+															<span>
+																Durak Kodu
+															</span>
+															<FontAwesomeIcon icon={faHashtag} />
+														</div>
 													</div>
 													{
 														busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
-															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 === 0 ? 'bg-zinc-300 dark:bg-zinc-700' : ''}`}>
+															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 !== 0 ? 'bg-zinc-300 dark:bg-zinc-700' : ''}`}>
 																<div className="" onClick={() =>
 																	window.open(`${station.location}`, "_blank")
 																}>
@@ -263,7 +273,7 @@ function App() {
 												<div className="font-bold text-3xl">
 													{bus.number}
 												</div>
-												<div className="text-sm">
+												<div className="text-xs">
 													{bus.description}
 												</div>
 												{/* <div className="text-xs font-mono">
@@ -280,20 +290,30 @@ function App() {
 												<hr className="border-zinc-200 dark:border-zinc-700 mb-5" />
 												<div className="flex flex-col space-y-2">
 													<div className="flex justify-between items-center">
-														<div className="font-bold">
+														<div className="text-xs font-bold">
 															{busStationDetail?.[direction ? 0 : 1].name}
 														</div>
 														<button className="px-2 py-1" onClick={() => setDirection(!direction)}>
 															{direction ? <FontAwesomeIcon icon={faBackwardStep} /> : <FontAwesomeIcon icon={faForwardStep} />}
 														</button>
 													</div>
-													<div className="flex justify-between items-center text-xs p-3 rounded-lg text-zinc-600 dark:text-zinc-400">
-														<FontAwesomeIcon icon={faMapLocationDot} />
-														<FontAwesomeIcon icon={faHashtag} />
+													<div className="flex justify-between items-center text-xs p-3 rounded-lg text-zinc-600 dark:text-zinc-400 bg-zinc-300 dark:bg-zinc-700">
+														<div className="flex items-center space-x-1">
+															<FontAwesomeIcon icon={faMapLocationDot} />
+															<span>
+																Durak Konumu
+															</span>
+														</div>
+														<div className="flex items-center space-x-1">
+															<span>
+																Durak Kodu
+															</span>
+															<FontAwesomeIcon icon={faHashtag} />
+														</div>
 													</div>
 													{
 														busStationDetail?.[direction ? 0 : 1].stations.map((station, index) => (
-															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 === 0 ? 'bg-zinc-200 dark:bg-zinc-700' : ''}`}>
+															<div key={index} className={`flex justify-between items-center text-xs p-3 rounded-lg ${index % 2 !== 0 ? 'bg-zinc-300 dark:bg-zinc-700' : ''}`}>
 																<div className="" onClick={() =>
 																	window.open(`${station.location}`, "_blank")
 																}>
