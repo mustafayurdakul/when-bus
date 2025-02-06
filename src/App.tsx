@@ -116,10 +116,6 @@ function App() {
 		}
 	}, [toggleLocation]);
 
-	useEffect(() => {
-		getUpcomingBuses();
-	}, [busStationInfo]);
-
 	return (
 		<div className="container mx-auto max-w-md bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 flex flex-col space-y-5 p-5">
 			<div className="space-y-2">
