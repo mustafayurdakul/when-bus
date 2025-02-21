@@ -15,7 +15,7 @@ function App() {
 
 	const [allBusses, setAllBusses] = useState<BusInfo[]>([]);
 
-	const [busStationInfo, setBusStationInfo] = useState<BusStationInfo>({ id: "30374" });
+	const [busStationInfo, setBusStationInfo] = useState<BusStationInfo>({ id: "50107" });
 
 	const [busStationDetail, setBusStationDetail] = useState<BusInfoDetail[] | null>(null);
 
