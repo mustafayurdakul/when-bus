@@ -119,7 +119,7 @@ function App() {
 	return (
 		<div className="container mx-auto max-w-md bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 flex flex-col space-y-5 p-5">
 			<div className="space-y-2">
-				<p className="text-2xl font-bold">Ne Zaman Otobüs? 🚌⏰</p>
+				<p className="text-2xl font-bold">Ne Zaman Otobüs? 🚌 ⏰</p>
 				<p className="">Bulunduğunuz yere yaklaşan otobüsleri öğrenin.</p>
 			</div>
 			{
