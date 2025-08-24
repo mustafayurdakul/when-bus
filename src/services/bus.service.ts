@@ -1,217 +1,218 @@
 import axios from "axios";
 
-import BusInfo from "../types/BusInfo";
-import BusInfoDetail from "../types/BusInfoDetail";
-import BusStationInfo from "../types/BusStationInfo";
-import ClosestBusStationsResponse from "../types/responses/ClosestBusStationsResponse";
+import type { BusInfo } from "../types/BusInfo";
+import type { BusInfoDetail } from "../types/BusInfoDetail";
+import type { BusStationInfo } from "../types/BusStationInfo";
+import type { ClosestBusStationsResponse } from "../types/responses/ClosestBusStationsResponse";
 
 const url = "https://www.e-komobil.com";
 const detailUrl = "https://www.kocaeli.bel.tr";
 
 class BusService {
+  public async getClosestBusStations(latitude: number, longitude: number) {
+    const response = await axios.post(
+      `${url}/yakin_duraklar.php`,
+      {
+        func: "ns",
+        lat: latitude,
+        lon: longitude,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      },
+    );
 
-	public async getClosestBusStations(latitude: number, longitude: number) {
+    const busStationInfoList: BusStationInfo[] = this.organizeBusStationList(
+      response.data,
+    );
 
-		const response = await axios.post(
-			`${url}/yakin_duraklar.php`,
-			{
-				func: "ns",
-				lat: latitude,
-				lon: longitude,
-			},
-			{
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded",
-				},
-			}
-		);
+    return busStationInfoList;
+  }
 
-		const busStationInfoList: BusStationInfo[] = this.organizeBusStationList(response.data);
+  private organizeBusStationList(
+    response: ClosestBusStationsResponse,
+  ): BusStationInfo[] {
+    const busStationInfoList: BusStationInfo[] = [];
 
-		return busStationInfoList;
+    for (let i = 0; i < response.name.length; i++) {
+      const busStationInfo: BusStationInfo = {
+        id: response.id[i],
+        name: response.name[i],
+      };
 
-	}
+      busStationInfoList.push(busStationInfo);
+    }
 
-	private organizeBusStationList(response: ClosestBusStationsResponse): BusStationInfo[] {
+    return busStationInfoList;
+  }
 
-		const busStationInfoList: BusStationInfo[] = [];
+  public async getUpcomingBuses(
+    stationId: number,
+  ): Promise<{ upcomingBusses: BusInfo[]; allBusses: BusInfo[] }> {
+    const response = await axios.post(
+      `${url}/yolcu_bilgilendirme_operations.php?cmd=searchSmartStop`,
+      {
+        stop_id: stationId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      },
+    );
 
-		for (let i = 0; i < response.name.length; i++) {
-			const busStationInfo: BusStationInfo = {
-				id: response.id[i],
-				name: response.name[i],
-			};
+    const { upcomingBusses, allBusses } = this.parseBusStationInfoResponse(
+      response.data,
+    );
 
-			busStationInfoList.push(busStationInfo);
-		}
+    return { upcomingBusses, allBusses };
+  }
 
-		return busStationInfoList;
-	}
+  private parseBusStationInfoResponse(data: string) {
+    const parser = new DOMParser();
 
+    // Fix unclosed tags
+    const fixedData = data
+      .replace(
+        /<link rel="dns-prefetch" href="\/\/graph\.facebook\.com">/g,
+        '<link rel="dns-prefetch" href="//graph.facebook.com" />',
+      )
+      .replace(
+        /<link rel="dns-prefetch" href="\/\/linkedin\.com">/g,
+        '<link rel="dns-prefetch" href="//linkedin.com" />',
+      );
+    const doc = parser.parseFromString(fixedData, "text/html");
 
-	public async getUpcomingBuses(stationId: number): Promise<{ upcomingBusses: BusInfo[], allBusses: BusInfo[] }> {
+    const yaklasanDiv = doc.getElementById("yaklasan");
+    const gecenDiv = doc.getElementById("gecen");
 
-		const response = await axios.post(
-			`${url}/yolcu_bilgilendirme_operations.php?cmd=searchSmartStop`,
-			{
-				stop_id: stationId,
-			},
-			{
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded",
-				},
-			}
-		);
+    let upcomingBusses: BusInfo[] = [];
+    let allBusses: BusInfo[] = [];
 
-		const { upcomingBusses, allBusses } = this.parseBusStationInfoResponse(response.data);
+    if (yaklasanDiv) {
+      const busElements = yaklasanDiv.querySelectorAll(".row.alert-info");
 
-		return { upcomingBusses, allBusses };
-	}
+      upcomingBusses = Array.from(busElements).map((busElement) => {
+        const numberElement = busElement.querySelector("div > span > a");
+        const number = numberElement?.textContent?.trim().split("-")[0] ?? "";
 
-	private parseBusStationInfoResponse(data: string) {
+        const descriptionElement = busElement.querySelector("div > span > a");
 
-		const parser = new DOMParser();
+        const description =
+          descriptionElement?.textContent
+            ?.trim()
+            .split("-")
+            .slice(1)
+            .join("-") ?? "";
 
-		// Fix unclosed tags
-		const fixedData = data
-			.replace(/<link rel="dns-prefetch" href="\/\/graph\.facebook\.com">/g, '<link rel="dns-prefetch" href="//graph.facebook.com" />')
-			.replace(/<link rel="dns-prefetch" href="\/\/linkedin\.com">/g, '<link rel="dns-prefetch" href="//linkedin.com" />');
-		const doc = parser.parseFromString(fixedData, "text/html");
+        const timeElement = busElement.querySelector(
+          'div[style*="background-color"]',
+        );
+        const time =
+          timeElement?.querySelector("span:first-child")?.textContent?.trim() ??
+          "";
 
-		const yaklasanDiv = doc.getElementById("yaklasan");
-		const gecenDiv = doc.getElementById("gecen");
+        const stopsElement = busElement.querySelector(
+          'div[style*="background-color"]',
+        );
+        const stops =
+          stopsElement
+            ?.querySelector("span:last-child")
+            ?.textContent?.trim()
+            .split(" ")[0] ?? "";
 
-		let upcomingBusses: BusInfo[] = [];
-		let allBusses: BusInfo[] = [];
+        return { number, description, remainingTime: time, stopsLeft: stops };
+      });
+    }
 
-		if (yaklasanDiv) {
-			const busElements = yaklasanDiv.querySelectorAll(".row.alert-info");
+    if (gecenDiv) {
+      const busElements = gecenDiv.querySelectorAll(".row.alert-info");
+      allBusses = Array.from(busElements).map((busElement) => {
+        const numberElement = busElement.querySelector("div > span > a");
+        const number = numberElement?.textContent?.trim().split("-")[0] ?? "";
 
-			upcomingBusses = Array.from(busElements).map((busElement) => {
-				const numberElement = busElement.querySelector("div > span > a");
-				const number =
-					numberElement?.textContent?.trim().split("-")[0] ?? "";
+        const descriptionElement = busElement.querySelector("div > span > a");
+        const description =
+          descriptionElement?.textContent
+            ?.trim()
+            .split("-")
+            .slice(1)
+            .join("-") ?? "";
 
-				const descriptionElement = busElement.querySelector(
-					"div > span > a"
-				);
+        return { number, description };
+      });
+    }
 
-				const description =
-					descriptionElement?.textContent
-						?.trim()
-						.split("-")
-						.slice(1)
-						.join("-") ?? "";
+    return { upcomingBusses, allBusses };
+  }
 
-				const timeElement = busElement.querySelector(
-					"div[style*=\"background-color\"]"
-				);
-				const time =
-					timeElement?.querySelector("span:first-child")?.textContent?.trim() ??
-					"";
+  private parseBusStationDetailResponse(data: string): BusInfoDetail[] {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, "text/html");
 
-				const stopsElement = busElement.querySelector(
-					"div[style*=\"background-color\"]"
-				);
-				const stops =
-					stopsElement?.querySelector("span:last-child")?.textContent
-						?.trim()
-						.split(" ")[0] ?? "";
+    const stations = doc.querySelectorAll(".col-md-6"); // Select both columns containing station information
 
-				return { number, description, remainingTime: time, stopsLeft: stops };
-			});
+    const unwantedIndex = [0, 1]; // Unwanted indexes to be removed from the list
 
-		}
+    if (stations.length > 0) {
+      const busInfoDetails: BusInfoDetail[] = [];
 
-		if (gecenDiv) {
-			const busElements = gecenDiv.querySelectorAll(".row.alert-info");
-			allBusses = Array.from(busElements).map((busElement) => {
-				const numberElement = busElement.querySelector("div > span > a");
-				const number =
-					numberElement?.textContent?.trim().split("-")[0] ?? "";
+      stations.forEach((station, index) => {
+        if (unwantedIndex.includes(index)) {
+          return;
+        }
 
-				const descriptionElement = busElement.querySelector(
-					"div > span > a"
-				);
-				const description =
-					descriptionElement?.textContent
-						?.trim()
-						.split("-")
-						.slice(1)
-						.join("-") ?? "";
+        const stationNameElement = station.querySelector("h3");
+        const tableRows = station.querySelectorAll("tbody tr");
 
-				return { number, description };
-			});
+        if (stationNameElement && tableRows.length > 0) {
+          const name = stationNameElement.textContent?.trim() || "";
+          const stations: { code: string; name: string; location: string }[] =
+            [];
 
-		}
+          tableRows.forEach((row) => {
+            const columns = row.querySelectorAll("td");
+            if (columns.length >= 3) {
+              // Assuming each row should have at least 3 columns
+              const code = columns[1].textContent?.trim() || "";
+              const name = columns[2].textContent?.trim() || "";
+              const locationElement = columns[2].querySelector("a");
+              const location = locationElement
+                ? locationElement.getAttribute("href") || ""
+                : "";
 
-		return { upcomingBusses, allBusses };
-	}
+              stations.push({
+                code,
+                name,
+                location,
+              });
+            }
+          });
 
-	private parseBusStationDetailResponse(data: string): BusInfoDetail[] {
-		const parser = new DOMParser();
-		const doc = parser.parseFromString(data, "text/html");
+          busInfoDetails.push({
+            name,
+            stations,
+          });
+        }
+      });
 
-		const stations = doc.querySelectorAll(".col-md-6"); // Select both columns containing station information
+      return busInfoDetails;
+    }
 
-		const unwantedIndex = [0, 1]; // Unwanted indexes to be removed from the list
+    return [];
+  }
 
-		if (stations.length > 0) {
-			const busInfoDetails: BusInfoDetail[] = [];
+  public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
+    const response = await axios.get(
+      `https://net-wizard-middleware.yurdakul.keenetic.link/?url=${detailUrl}/hatlar/${station}/`,
+    );
 
-			stations.forEach((station, index) => {
+    const busInfoDetail = this.parseBusStationDetailResponse(response.data);
 
-				if (unwantedIndex.includes(index)) {
-					return;
-				}
-
-				const stationNameElement = station.querySelector("h3");
-				const tableRows = station.querySelectorAll("tbody tr");
-
-				if (stationNameElement && tableRows.length > 0) {
-					const name = stationNameElement.textContent?.trim() || "";
-					const stations: { code: string, name: string, location: string }[] = [];
-
-					tableRows.forEach(row => {
-						const columns = row.querySelectorAll("td");
-						if (columns.length >= 3) { // Assuming each row should have at least 3 columns
-							const code = columns[1].textContent?.trim() || "";
-							const name = columns[2].textContent?.trim() || "";
-							const locationElement = columns[2].querySelector("a");
-							const location = locationElement ? locationElement.getAttribute("href") || "" : "";
-
-							stations.push({
-								code,
-								name,
-								location,
-							});
-						}
-					});
-
-					busInfoDetails.push({
-						name,
-						stations,
-					});
-				}
-			});
-
-			return busInfoDetails;
-		}
-
-		return [];
-	}
-
-	public async getBusStationDetail(station: string): Promise<BusInfoDetail[]> {
-
-		const response = await axios.get(
-			`https://net-wizard-middleware.yurdakul.keenetic.link/?url=${detailUrl}/hatlar/${station}/`
-		);
-
-		const busInfoDetail = this.parseBusStationDetailResponse(response.data);
-
-		return busInfoDetail;
-	}
-
+    return busInfoDetail;
+  }
 }
 
 export default new BusService();

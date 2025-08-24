@@ -1,8 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 body {
-	@apply bg-zinc-100 dark:bg-zinc-900;
-	color-scheme: dark light;
+  @apply bg-zinc-100 dark:bg-zinc-900;
+  color-scheme: dark light;
 }

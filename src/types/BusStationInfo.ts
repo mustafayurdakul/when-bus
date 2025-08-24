@@ -1,6 +1,4 @@
-type BusStationInfo = {
-	id: string;
-	name?: string;
-}
-
-export default BusStationInfo;
+export type BusStationInfo = {
+  id: string;
+  name?: string;
+};

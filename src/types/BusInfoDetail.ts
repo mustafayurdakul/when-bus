@@ -1,10 +1,8 @@
-type BusInfoDetail = {
-	name: string;
-	stations: {
-		code: string,
-		name: string,
-		location: string
-	}[]
-}
-
-export default BusInfoDetail;
+export type BusInfoDetail = {
+  name: string;
+  stations: {
+    code: string;
+    name: string;
+    location: string;
+  }[];
+};
